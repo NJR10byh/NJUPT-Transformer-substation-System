@@ -1,0 +1,914 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <style type="text/css">
+      html,
+      body {
+        margin: 0;
+      }
+
+      canvas {
+        display: block;
+      }
+      .top {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      button {
+        width: 60px;
+        height: 25px;
+        margin-left: 20px;
+      }
+      input {
+        height: 10px;
+        padding: 5px;
+      }
+      span {
+        font-size: 30px;
+        font-weight: bold;
+      }
+    </style>
+    <script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>
+    <!-- jQuery备用CDN -->
+    <!-- <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script> -->
+  </head>
+  <body>
+    <div class="top">
+      <!-- <span>人员姓名：</span>
+      <input type="text" placeholder="请输入人员姓名" id="nameinfo" />
+      <span>开始日期：</span>
+      <input type="text" placeholder="请输入起始时间" id="startinfo" />
+      <span>结束日期：</span>
+      <input type="text" placeholder="请输入终止时间" id="endinfo" />
+      <button id="btn">查询</button> -->
+      <span>经度: <span id="lng"></span></span>&nbsp;&nbsp;&nbsp;&nbsp;
+      <span>纬度: <span id="lat"></span></span>&nbsp;&nbsp;&nbsp;&nbsp;
+      <span>高度: <span id="height"></span> 米</span>
+    </div>
+    <script type="module">
+      import * as THREE from "./lib/build/three.module.js";
+
+      import Stats from "./lib/examples/jsm/libs/stats.module.js";
+      import { GUI } from "./lib/examples/jsm/libs/dat.gui.module.js";
+
+      import { OrbitControls } from "./lib/examples/jsm/controls/OrbitControls.js";
+      import { MTLLoader } from "./lib/examples/jsm/loaders/MTLLoader.js";
+      import { OBJLoader } from "./lib/examples/jsm/loaders/OBJLoader.js";
+      import { EffectComposer } from "./lib/examples/jsm/postprocessing/EffectComposer.js";
+      import { RenderPass } from "./lib/examples/jsm/postprocessing/RenderPass.js";
+      import { ShaderPass } from "./lib/examples/jsm/postprocessing/ShaderPass.js";
+      import { OutlinePass } from "./lib/examples/jsm/postprocessing/OutlinePass.js";
+      import { FXAAShader } from "./lib/examples/jsm/shaders/FXAAShader.js";
+      //import Search from "./search.js";
+
+      //Search();
+
+      //加入定时器
+      var timer = null;
+      var i = 0;
+
+      //先生成场景
+      var scene = new THREE.Scene();
+      scene.background = new THREE.Color(0x999999);
+
+      //场景参数变量
+      var renderer, camera, gui, light_1, light_2, light_3;
+      var mtlloader, objloader;
+      var stats, controls;
+
+      var linearea;
+      var mouse = new THREE.Vector2();
+      var selectedObjects = [];
+      var raycaster = new THREE.Raycaster();
+
+      //渲染通道变量
+      var composer;
+      var renderPass, outlinePass, effectFXAA;
+
+      // function X_position(lng) {
+      //   var x = (lng - 118.9245542) / 0.0000212951351;
+      //   return x;
+      // }
+
+      // function Y_position(lat) {
+      //   var y = (lat - 32.1167652) / 0.0000212851351;
+      //   return y;
+      // }
+
+      // E=4 高精度
+      function X_position(lng) {
+        var x = (lng - 118.9246212) / 0.0000212951351;
+        return x;
+      }
+
+      function Y_position(lat) {
+        var y = (lat - 32.1172232) / 0.0000212851351;
+        return y;
+      }
+
+      // 显示两点之间连线
+      function ShowLine(log_1, lat_1, log_2, lat_2, high_1, high_2) {
+        var x_1 = X_position(log_1);
+        var y_1 = Y_position(lat_1);
+        var x_2 = X_position(log_2);
+        var y_2 = Y_position(lat_2);
+        var geometry = new THREE.Geometry();
+        var meterial = new THREE.LineBasicMaterial({ color: 0xfc427b });
+        geometry.vertices.push(new THREE.Vector3(x_1, y_1, high_1));
+        geometry.vertices.push(new THREE.Vector3(x_2, y_2, high_2));
+        var line = new THREE.Line(geometry, meterial);
+        scene.add(line);
+      }
+
+      function init() {
+        //初始化渲染器
+        renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        //渲染器阴影效果
+        renderer.setClearColor(0xffffff);
+        document.body.appendChild(renderer.domElement);
+
+        //初始化相机
+        camera = new THREE.PerspectiveCamera(
+          45,
+          window.innerWidth / window.innerHeight,
+          0.1,
+          1000
+        );
+        camera.up.set(0, 0, 1);
+        camera.position.set(0, 40, 75);
+        camera.lookAt(new THREE.Vector3(0, 0, 0));
+
+        //初始化GUI
+        // // var option = new (function () {
+        // //   this.ID = cube1.name;
+        // //   this.height = cube.position.z;
+        // //   this.position = cube.position.x;
+        // // })();
+        // // gui = new GUI();
+        // //将属性设置到gui当中
+        // gui.domElement.style =
+        //   "position:absolute;top:50px;left:0px;height:600px";
+        // gui.add(option, "ID").name("人员ID: ").listen();
+        // gui.add(option, "height").name("高度: ").listen();
+        // gui.add(option, "position").name("位置: ").listen();
+
+        //初始化光源
+        light_1 = new THREE.DirectionalLight(0xffffff);
+        light_2 = new THREE.DirectionalLight(0xffffff);
+        light_3 = new THREE.DirectionalLight(0xffffff);
+        light_1.position.set(0.5, -1.0, 0.5).normalize();
+        light_2.position.set(0.5, 1.0, 0.5).normalize();
+        light_3.position.set(-1.5, 1.0, 0.5).normalize();
+        scene.add(light_1);
+        scene.add(light_2);
+        scene.add(light_3);
+
+        //初始化模型
+        //添加辅助坐标
+        var helper = new THREE.AxesHelper(50);
+        scene.add(helper);
+        mtlloader = new MTLLoader();
+        objloader = new OBJLoader();
+        mtlloader.load("./models/okk6.mtl", function (mtl) {
+          mtl.preload();
+          objloader.setMaterials(mtl);
+          objloader.load("./models/okk6.obj", function (obj) {
+            // console.log("x:" + obj.position.x);
+            // console.log("y:" + obj.position.y);
+            // console.log("z:" + obj.position.z);
+            //obj.rotateZ(0.173); // 原来的值
+            obj.rotateZ(0.183);
+            obj.scale.set(3, 3, 3);
+            obj.position.x = -7.1;
+            obj.position.y = -82;
+            obj.position.z = 56;
+            scene.add(obj);
+          });
+        });
+
+        //初始化性能插件
+        stats = new Stats();
+        document.body.appendChild(stats.dom);
+
+        //初始化用户交互插件
+        controls = new OrbitControls(camera, renderer.domElement);
+        // 使动画循环使用时阻尼或自转 意思是否有惯性
+        controls.enableDamping = false;
+        //动态阻尼系数 就是鼠标拖拽旋转灵敏度
+        //controls.dampingFactor = 0.25;
+        // 是否可以按键控制
+        controls.enableKeys = false;
+        //是否可以缩放
+        controls.enableZoom = true;
+        //是否自动旋转
+        controls.autoRotate = false;
+        //设置相机距离原点的最近距离
+        controls.minDistance = 1;
+        //设置相机距离原点的最远距离
+        controls.maxDistance = 1000;
+        //是否开启右键拖拽
+        controls.enablePan = true;
+        window.addEventListener("resize", onWindowResize, false);
+        document.addEventListener("keydown", onKeyDown, false);
+
+        /*
+        //初始化轮廓渲染通道
+        composer = new EffectComposer(renderer);
+        renderPass = new RenderPass(scene, camera);
+        composer.addPass(renderPass);
+        outlinePass = new OutlinePass(new THREE.Vector2(window.innerWidth, window.innerHeight), scene, camera);
+        composer.addPass(outlinePass);
+        effectFXAA = new ShaderPass(FXAAShader);
+        effectFXAA.uniforms['resolution'].value.set(1 / window.innerWidth, 1 / window.innerHeight);
+        composer.addPass(effectFXAA);
+
+        renderer.domElement.style.touchAction = 'none';
+        renderer.domElement.addEventListener('pointermove', onPointerMove, false);
+
+
+        function onPointerMove(event) {
+            if (event.isPrimary === false) return;
+
+            mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+            mouse.y = - (event.clientY / window.innerHeight) * 2 + 1;
+
+            checkIntersection();
+        }
+
+
+        function addSelectedObject(object) {
+            selectedObjects = [];
+            selectedObjects.push(object);
+        }
+
+        function checkIntersection() {
+            raycaster.setFromCamera(mouse. camera);
+            var intersects = raycaster.intersectObject(scene, true);
+
+            if (intersects.length > 0) {
+                var selectedObject = intersects[0].object;
+                addSelectedObject(selectedObject);
+                outlinePass.selectedObjects = selectedObjects;
+            }
+        }
+        */
+      }
+
+      //本地经纬度数组（测试）118.935406,32.121031
+      // var data = [
+      //   {
+      //     lng: 118.9238342,
+      //     lat: 32.1170452,
+      //     height: 3,
+      //   },
+      //   {
+      //     lng: 118.9237342,
+      //     lat: 32.1168452,
+      //     height: 1,
+      //   },
+      //   {
+      //     lng: 118.9239342,
+      //     lat: 32.1169452,
+      //     height: 5,
+      //   },
+      //   {
+      //     lng: 118.9237342,
+      //     lat: 32.1168452,
+      //     height: 7,
+      //   },
+      //   {
+      //     lng: 118.9240342,
+      //     lat: 32.1170452,
+      //     height: 6,
+      //   },
+      //   {
+      //     lng: 118.9238342,
+      //     lat: 32.1172452,
+      //     height: 4,
+      //   },
+      // ];
+
+      // var btn = document.getElementById("btn");
+      // btn.onclick = function () {
+      //   var nameinfo = document.getElementById("nameinfo").value;
+      //   var startinfo = document.getElementById("startinfo").value;
+      //   var endinfo = document.getElementById("endinfo").value;
+      //   var URL =
+      //     "http://120.26.234.200:8080/location/history/?name=" +
+      //     nameinfo +
+      //     "&time1=" +
+      //     startinfo +
+      //     "&time2=" +
+      //     endinfo;
+      //   updateposition(URL);
+      // };
+
+      function updateposition(URL) {
+        // var path = [{ lng: 118.9239342, lat: 32.1169552, height: -2.2 }];
+        var path = [];
+        var audio = new Audio("./sources/warning2.mp3");
+        //console.log(URL);
+        AnimationAction_1.timeScale = 5;
+        AnimationAction_2.timeScale = 5;
+        AnimationAction_1.play();
+        AnimationAction_2.play();
+
+        // 本地数据测试
+        // var i = 1;
+        // setInterval(function () {
+        //   if (i > data.length - 1) {
+        //     i = 1;
+        //   }
+        //   cube.position.x = X_position(data[i].lng);
+        //   cube.position.y = Y_position(data[i].lat);
+        //   cube.position.z = data[i].height;
+        //   audio.load();
+        //   if (cube.position.z > 6.5) {
+        //     audio.play();
+        //     setTimeout(function () {
+        //       alert("越界了！！！！");
+        //     }, 1000);
+        //   }
+        //   console.log("data[i].lng: ", i, data[i].lng);
+        //   ShowLine(
+        //     data[i - 1].lng,
+        //     data[i - 1].lat,
+        //     data[i].lng,
+        //     data[i].lat,
+        //     data[i - 1].height,
+        //     data[i].height
+        //   );
+        //   i++;
+        // }, 2000);
+
+        // 接口测试;  高度比例尺 现实 : 模型 = 5 : 2
+        // 历史轨迹
+        // var i = 1;
+        // setInterval(function () {
+        //   $.ajax({
+        //     type: "GET",
+        //     url: "http://120.26.234.200:8080/location/test/",
+        //     dataType: "json",
+        //     success: function (data) {
+        //       console.log(data.data);
+        //       if (i > data.data.length - 1) {
+        //         i = 1;
+        //       }
+        //       cube.position.x = X_position(data.data[i].fields.lng);
+        //       cube.position.y = Y_position(data.data[i].fields.lat);
+        //       cube.position.z = (data.data[i].fields.high * 1 - 18) * 0.4 - 5.8;
+        //       document.getElementById("lng").innerHTML =
+        //         data.data[i].fields.lng;
+        //       document.getElementById("lat").innerHTML =
+        //         data.data[i].fields.lat;
+        //       document.getElementById("height").innerHTML = (
+        //         ((cube.position.z.toFixed(3) * 1 + 4.694) * 170) /
+        //         69
+        //       ).toFixed(3);
+        //       // console.log(i);
+        //       // console.log("i-1 ",data.data[i-1].fields.lng*1);
+        //       // console.log(data.data[i-1].fields.lat*1);
+        //       // console.log("i ",data.data[i].fields.lng*1);
+        //       // console.log(data.data[i].fields.lat*1);
+        //       ShowLine(
+        //         data.data[i - 1].fields.lng * 1,
+        //         data.data[i - 1].fields.lat * 1,
+        //         data.data[i].fields.lng * 1,
+        //         data.data[i].fields.lat * 1,
+        //         (data.data[i - 1].fields.high * 1 - 18) * 0.4 - 5.8,
+        //         (data.data[i].fields.high * 1 - 18) * 0.4 - 5.8
+        //       );
+        //       i++;
+        //     },
+        //     error: function (result) {
+        //       console.log(result.status);
+        //     },
+        //   });
+        // }, 1000);
+
+        // 实时路径
+        var shishipath = [];
+        setInterval(function () {
+          $.ajax({
+            type: "GET",
+            url: "http://120.26.234.200:8080/location/latest/",
+            dataType: "json",
+            success: function (data) {
+              console.log(data.data[data.data.length - 1].fields.lng);
+              console.log(data.data[data.data.length - 1].fields.lat);
+              // 5.8
+              console.log(data.data[data.data.length - 1].fields.high);
+              cube.position.x = X_position(
+                data.data[data.data.length - 1].fields.lng
+              );
+              cube.position.y = Y_position(
+                data.data[data.data.length - 1].fields.lat
+              );
+              cube.position.z =
+                (data.data[data.data.length - 1].fields.high * 1 - 18) * 0.4 -
+                4.82;
+              document.getElementById("lng").innerHTML =
+                data.data[data.data.length - 1].fields.lng;
+              document.getElementById("lat").innerHTML =
+                data.data[data.data.length - 1].fields.lat;
+              document.getElementById("height").innerHTML = (
+                ((cube.position.z * 1 + 4.694) * 170) /
+                69
+              ).toFixed(3); //cube.position.z = 0;
+              let newpath = {
+                lng: data.data[data.data.length - 1].fields.lng * 1,
+                lat: data.data[data.data.length - 1].fields.lat * 1,
+                height: cube.position.z * 1,
+              };
+              shishipath.push(newpath);
+              if (shishipath.length == 2) {
+                console.log(shishipath[0]);
+                console.log(shishipath[1]);
+                ShowLine(
+                  shishipath[0].lng,
+                  shishipath[0].lat,
+                  shishipath[1].lng,
+                  shishipath[1].lat,
+                  shishipath[0].height,
+                  shishipath[1].height
+                );
+                shishipath.shift();
+              }
+              //越界警报 越界高度为1.5米
+              audio.load();
+              if (
+                (((cube.position.z * 1 + 4.694) * 170) / 69).toFixed(2) * 1 >
+                1.5
+              ) {
+                audio.play();
+                setTimeout(function () {
+                  alert("越界了！！！！");
+                }, 1000);
+              }
+            },
+            error: function (result) {
+              console.log(result.status);
+            },
+          });
+        }, 1000);
+      }
+
+      //声明一个时钟对象
+      var clock = new THREE.Clock();
+      function render() {
+        renderer.render(scene, camera);
+        // 更新帧动画的时间
+        mixer.update(clock.getDelta());
+        //console.log("两帧渲染时间间隔" + clock.getDelta() + " s");
+      }
+
+      //
+      function onKeyDown(event) {
+        switch (event.keyCode) {
+          case 37: //平面
+            cube.position.x += 1;
+            break;
+          case 39:
+            cube.position.x -= 1;
+            break;
+          case 38:
+            cube.position.z += 1;
+            break;
+          case 40:
+            cube.position.z -= 1;
+            break;
+          case 85:
+            cube.position.y += 1;
+            break;
+          case 68:
+            cube.position.y -= 1;
+            break;
+          default:
+            break;
+        }
+      }
+      //
+      var cube, cube1, cube2, group;
+      function initCube() {
+        var geometry = new THREE.BoxGeometry(0.4, 0.4, 0.4);
+        var material = new THREE.MeshBasicMaterial({
+          color: "white",
+        });
+
+        cube = new THREE.Mesh(geometry, material);
+        scene.add(cube);
+
+        //加载3个正方体进行测试
+        group = new THREE.Group();
+        var cubegeometry = new THREE.BoxGeometry(1, 1, 1);
+        var cubematerial = new THREE.MeshBasicMaterial({ color: "white" });
+        cube1 = new THREE.Mesh(cubegeometry, cubematerial);
+        cube2 = new THREE.Mesh(cubegeometry, cubematerial);
+        cube1.name = "cube1";
+        cube2.name = "cube2";
+        group.add(cube1, cube2);
+        scene.add(group);
+      }
+
+      initCube();
+
+      var AnimationAction_1, AnimationAction_2, mixer;
+      function initCurve() {
+        //创建轨迹线对象
+        var curve1 = new THREE.CatmullRomCurve3(
+          [
+            new THREE.Vector3(0, 0, 0),
+            new THREE.Vector3(-25, 10, 0),
+            new THREE.Vector3(8, 10, 0),
+          ],
+          false
+        );
+
+        var curve2 = new THREE.CatmullRomCurve3(
+          [
+            new THREE.Vector3(0, 0, 0),
+            new THREE.Vector3(10, 10, 10),
+            new THREE.Vector3(30, 0, 70),
+            new THREE.Vector3(10, 0, 50),
+          ],
+          false
+        );
+
+        //利用顶点points初始化轨迹线
+        var points_1 = curve1.getPoints(100);
+        var points_2 = curve2.getPoints(100);
+        var geometry_1 = new THREE.Geometry();
+        var geometry_2 = new THREE.Geometry();
+        geometry_1.vertices = points_1;
+        geometry_2.vertices = points_2;
+        var material = new THREE.LineBasicMaterial({ color: 0xffffff });
+        var line1 = new THREE.Line(geometry_1, material);
+        var line2 = new THREE.Line(geometry_2, material);
+        scene.add(line1);
+        scene.add(line2);
+
+        // 声明一个数组用于存储时间序列
+        let arr = [];
+        for (let i = 0; i < 101; i++) {
+          arr.push(i);
+        }
+        // 生成一个时间序列
+        var times = new Float32Array(arr);
+
+        //创建第一根轨迹
+        var posArr_1 = [];
+        let duration = 101;
+        points_1.forEach((elem) => {
+          posArr_1.push(elem.x, elem.y, elem.z);
+        });
+        // 创建一个和时间序列相对应的位置坐标系列
+        var values_1 = new Float32Array(posArr_1);
+        // 创建一个帧动画的关键帧数据，曲线上的位置序列对应一个时间序列
+        var posTrack_1 = new THREE.KeyframeTrack(
+          "cube1.position",
+          times,
+          values_1
+        );
+        let clip_1 = new THREE.AnimationClip("default", duration, [posTrack_1]);
+        //var mixer_1 = new THREE.AnimationMixer(cube1);
+
+        //创建第二根轨迹
+        var posArr_2 = [];
+        points_2.forEach((elem) => {
+          posArr_2.push(elem.x, elem.y, elem.z);
+        });
+        var values_2 = new Float32Array(posArr_2);
+        var posTrack_2 = new THREE.KeyframeTrack(
+          "cube2.position",
+          times,
+          values_2
+        );
+        let clip_2 = new THREE.AnimationClip("default", duration, [posTrack_2]);
+        //var mixer_2 = new THREE.AnimationMixer(cube2);
+
+        mixer = new THREE.AnimationMixer(group);
+        AnimationAction_1 = mixer.clipAction(clip_1);
+        AnimationAction_2 = mixer.clipAction(clip_2);
+      }
+
+      initCurve();
+
+      var objects = [];
+      function initobstacle() {
+        //三维围栏
+        var geometryBox = box(4, 4, 4);
+
+        var lineSegments = new THREE.LineSegments(
+          geometryBox,
+          new THREE.LineDashedMaterial({
+            color: "red",
+            dashSize: 3,
+            gapSize: 1,
+          })
+        );
+        lineSegments.computeLineDistances();
+
+        objects.push(lineSegments);
+        lineSegments.position.y = 8; // y = [6,10]
+        lineSegments.position.z = 8; //z = [6,10]
+        lineSegments.position.x = 8; //x = [6,10]
+        scene.add(lineSegments);
+
+        //二维围栏
+        geometryBox = rectangle(8, 16, 0);
+
+        linearea = new THREE.LineSegments(
+          geometryBox,
+          new THREE.LineDashedMaterial({
+            color: "red",
+            dashSize: 3,
+            gapSize: 1,
+          })
+        );
+        linearea.computeLineDistances();
+        linearea.rotation.z = (Math.PI * 110) / 180;
+
+        objects.push(linearea);
+        linearea.position.y = 4; // y = [0,8]
+        linearea.position.z = 0; //z = ~
+        linearea.position.x = -18; //x = [-10,-26]
+        scene.add(linearea);
+      }
+      // 空间围栏
+      function box(width, height, depth) {
+        (width = width * 0.5), (height = height * 0.5), (depth = depth * 0.5);
+
+        var geometry = new THREE.BufferGeometry();
+        var position = [];
+
+        position.push(
+          -width,
+          -height,
+          -depth,
+          -width,
+          height,
+          -depth,
+
+          -width,
+          height,
+          -depth,
+          width,
+          height,
+          -depth,
+
+          width,
+          height,
+          -depth,
+          width,
+          -height,
+          -depth,
+
+          width,
+          -height,
+          -depth,
+          -width,
+          -height,
+          -depth,
+
+          -width,
+          -height,
+          depth,
+          -width,
+          height,
+          depth,
+
+          -width,
+          height,
+          depth,
+          width,
+          height,
+          depth,
+
+          width,
+          height,
+          depth,
+          width,
+          -height,
+          depth,
+
+          width,
+          -height,
+          depth,
+          -width,
+          -height,
+          depth,
+
+          -width,
+          -height,
+          -depth,
+          -width,
+          -height,
+          depth,
+
+          -width,
+          height,
+          -depth,
+          -width,
+          height,
+          depth,
+
+          width,
+          height,
+          -depth,
+          width,
+          height,
+          depth,
+
+          width,
+          -height,
+          -depth,
+          width,
+          -height,
+          depth
+        );
+
+        geometry.setAttribute(
+          "position",
+          new THREE.Float32BufferAttribute(position, 3)
+        );
+
+        return geometry;
+      }
+
+      //平面围栏
+      function rectangle(width, height, depth) {
+        (width = width * 0.5), (height = height * 0.5), (depth = depth * 0.5);
+
+        var geometry = new THREE.BufferGeometry();
+        var position = [];
+        position.push(
+          -width,
+          -height,
+          -depth,
+          -width,
+          height,
+          -depth,
+
+          -width,
+          height,
+          -depth,
+          width,
+          height,
+          -depth,
+
+          width,
+          height,
+          -depth,
+          width,
+          -height,
+          -depth,
+
+          width,
+          -height,
+          -depth,
+          -width,
+          -height,
+          -depth
+        );
+        geometry.setAttribute(
+          "position",
+          new THREE.Float32BufferAttribute(position, 3)
+        );
+
+        return geometry;
+      }
+
+      //窗口变动触发的函数
+      function onWindowResize() {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        //composer.setSize( window.innerWidth, window.innerHeight );
+        //effectFXAA.uniforms[ 'resolution' ].value.set( 1 / window.innerWidth, 1 / window.innerHeight );
+      }
+
+      function collision(CUBE) {
+        var judge1 =
+          CUBE.position.x - 0.5 > 10 ||
+          CUBE.position.x + 0.5 < 6 ||
+          CUBE.position.y - 0.5 > 10 ||
+          CUBE.position.y + 0.5 < 6 ||
+          CUBE.position.z - 0.5 > 10 ||
+          CUBE.position.z + 0.5 < 6;
+        var judge2 = false;
+        var center1 = new THREE.Vector2(CUBE.position.x, CUBE.position.y);
+        var xVt1 = new THREE.Vector2(0.5, 0);
+        var yVt1 = new THREE.Vector2(0, 0.5);
+        var center2 = new THREE.Vector2(
+          linearea.position.x,
+          linearea.position.y
+        );
+
+        var xVt2 = new THREE.Vector2(7.5175405, 2.736161);
+        var yVt2 = new THREE.Vector2(1.3680805, -3.75877);
+        const vectorAB = center1.clone().sub(center2); // 矩形中心连线
+        if (
+          Math.abs(xVt1.dot(xVt1)) +
+            Math.abs(xVt2.dot(xVt1)) +
+            Math.abs(yVt1.dot(xVt1)) +
+            Math.abs(yVt2.dot(xVt1)) <=
+          Math.abs(vectorAB.dot(xVt1))
+        )
+          judge2 = true;
+        if (
+          Math.abs(xVt1.dot(xVt2)) +
+            Math.abs(xVt2.dot(xVt2)) +
+            Math.abs(yVt1.dot(xVt2)) +
+            Math.abs(yVt2.dot(xVt2)) <=
+          Math.abs(vectorAB.dot(xVt2))
+        )
+          judge2 = true;
+        if (
+          Math.abs(xVt1.dot(yVt1)) +
+            Math.abs(xVt2.dot(yVt1)) +
+            Math.abs(yVt1.dot(yVt1)) +
+            Math.abs(yVt2.dot(yVt1)) <=
+          Math.abs(vectorAB.dot(yVt1))
+        )
+          judge2 = true;
+        if (
+          Math.abs(xVt1.dot(yVt2)) +
+            Math.abs(xVt2.dot(yVt2)) +
+            Math.abs(yVt1.dot(yVt2)) +
+            Math.abs(yVt2.dot(yVt2)) <=
+          Math.abs(vectorAB.dot(yVt2))
+        )
+          judge2 = true;
+        if (judge1 && judge2) {
+          CUBE.material.color.setHex(0xffffff);
+        } else {
+          CUBE.material.color.setHex(0xff0000);
+          //console.log("越界了！！");
+        }
+      }
+
+      var spritel;
+      function position() {
+        scene.remove(spritel);
+        let center = cube.position.clone(),
+          nameStr = "姓名: " + "海明",
+          numberStr = "工号: " + "1001",
+          xStr = "x:" + center.x.toFixed(3),
+          yStr = "y:" + center.y.toFixed(3),
+          zStr =
+            "z:" +
+            (((center.z.toFixed(3) * 1 + 4.694) * 170) / 69).toFixed(3) +
+            " 米";
+
+        let canvas = document.createElement("canvas");
+        canvas.width = 300;
+        canvas.height = 420;
+        let context = canvas.getContext("2d");
+        context.font = "Bold 52px Georgia";
+        context.fillStyle = "#fc427b";
+        context.fillText(nameStr, 0, 80);
+        context.fillText(numberStr, 0, 160);
+        context.fillText(xStr, 0, 240);
+        context.fillText(yStr, 0, 320);
+        context.fillText(zStr, 0, 400);
+        let spritelTexture = new THREE.Texture(canvas);
+        spritelTexture.needsUpdate = true;
+        let spriteMaterial = new THREE.SpriteMaterial({ map: spritelTexture });
+        spritel = new THREE.Sprite(spriteMaterial);
+        spritel.scale.set(5, 2.5, 1);
+        spritel.position.set(center.x + 3, center.y - 2, center.z + 2);
+        scene.add(spritel);
+      }
+
+      function animate() {
+        //updateposition();
+        //更新控制器
+        render();
+
+        //更新性能插件
+        stats.update();
+
+        controls.update();
+        collision(cube);
+        collision(cube1);
+        collision(cube2);
+        position();
+        requestAnimationFrame(animate);
+        //composer.render();
+      }
+
+      function draw() {
+        init();
+        initobstacle();
+
+        updateposition();
+        animate();
+        window.onresize = onWindowResize;
+      }
+      draw();
+    </script>
+  </body>
+</html>

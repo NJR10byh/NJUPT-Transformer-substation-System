@@ -17,7 +17,7 @@
           </el-form-item>
         </el-form>
 
-        <div class="oper-btns">
+      <div class="oper-btns">
           <el-button
               class="add-btn"
               icon="el-icon-circle-plus-outline"
@@ -46,12 +46,12 @@
           <template slot-scope="scope">
             <el-button
                 class="edit-btn"
-                icon="iconfont icon-weibiaoti2"
+                icon="iconfont iconbianji"
                 @click="handleEdit(scope.$index, scope.row)"
             ></el-button>
             <el-button
                 class="del-btn"
-                icon="iconfont icon-shanchu"
+                icon="iconfont iconshanchu"
                 @click="handleDelete(scope.$index)"
             ></el-button>
           </template>

@@ -2,7 +2,7 @@
   <div class="pathQuery">
     <div class="header">
       <el-form :inline="true" :model="formInline" class="demo-form-inline">
-        <el-form-item>
+        <!-- <el-form-item>
           <el-select v-model="formInline.overall" clearable placeholder="全局展示">
             <el-option label="全局一" value="全局一"></el-option>
             <el-option label="全局二" value="全局二"></el-option>
@@ -13,7 +13,7 @@
             <el-option label="区域一" value="区域一"></el-option>
             <el-option label="区域二" value="区域二"></el-option>
           </el-select>
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item style="margin-right:0">
           <el-input
             class="input-text"
@@ -39,39 +39,51 @@
     </div>
     <!-- 地图 -->
     <div class="map-wrap">
-      <HistoryPath ref="HistoryPath"></HistoryPath>
+      <!-- <HistoryPath ref="HistoryPath"></HistoryPath> -->
+      <!-- <iframe src="http://106.54.74.204/web_model/test.html" width="100%" height="800" frameborder="0">
+        您的浏览器不支持iframe，请升级
+      </iframe> -->
+      <iframe
+        src="http://localhost:8080/webmodel/test.html"
+        width="100%"
+        height="100%"
+        frameborder="0"
+      >
+        您的浏览器不支持iframe，请升级
+      </iframe>
     </div>
   </div>
 </template>
 
 <script>
 import nowTime from "../components/Timer"; //时间
-import HistoryPath from "../components/HistoryPath"; //地图
+//import HistoryPath from "../components/HistoryPath"; //地图
 export default {
   name: "PathQuery",
-  components: { nowTime, HistoryPath },
+  components: { nowTime },
+  //components: { nowTime, HistoryPath },
   data() {
     return {
       formInline: {
         overall: "",
         region: "",
-        person: ""
+        person: "",
       },
-      hoursTip: "AM"
+      hoursTip: "AM",
     };
   },
   methods: {
     // 搜索
     onSubmit() {
-      let flag=false; //判断员工是否找到
+      let flag = false; //判断员工是否找到
       /*Vue组件间的调用*/
-      for(let i=0;i<this.$refs.HistoryPath.markers.length;i++){
-        if(this.formInline.person==this.$refs.HistoryPath.markers[i].name){
-          this.$refs.HistoryPath.markers[i].showFlag=true;
-          flag=true;
+      for (let i = 0; i < this.$refs.HistoryPath.markers.length; i++) {
+        if (this.formInline.person == this.$refs.HistoryPath.markers[i].name) {
+          this.$refs.HistoryPath.markers[i].showFlag = true;
+          flag = true;
         }
       }
-      if(!flag){
+      if (!flag) {
         alert("未找到此员工!!!");
       }
     },
@@ -86,11 +98,12 @@ export default {
       } else {
         self.hoursTip = "PM";
       }
-    }
+    },
   },
-  created() {     //在计时器生命周期内执行
+  created() {
+    //在计时器生命周期内执行
     this.getMycount();
-  }
+  },
 };
 </script>
 <style lang="scss">
@@ -363,7 +376,7 @@ export default {
     color: #01664f;
     font-size: 14px;
     position: relative;
-    top: 4px;
+    //top: 2px;
     margin-left: 5px;
   }
 }
@@ -373,5 +386,4 @@ export default {
   position: relative;
   overflow: hidden;
 }
-
 </style>

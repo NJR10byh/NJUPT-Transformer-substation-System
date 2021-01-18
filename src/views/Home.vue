@@ -4,37 +4,33 @@
     <el-header style="height:80px">
       <div class="logo-wrap">
         <a
-            href="https://www.baidu.com/link?url=jZjZePVYxU7a6awQeArjN_afCrflYD5Y4ZyrWv5UV3pEU6J5HEWC3PYItLcz3Nda&wd=&eqid=a64ab72600038e92000000055f6f2870"
-            target="_blank"
+          href="https://www.baidu.com/link?url=jZjZePVYxU7a6awQeArjN_afCrflYD5Y4ZyrWv5UV3pEU6J5HEWC3PYItLcz3Nda&wd=&eqid=a64ab72600038e92000000055f6f2870"
+          target="_blank"
         >
           <img src="../assets/logo.png" class="logo" alt />
         </a>
         <div class="toggle-button" @click="toggleCollapse">
-          <i class="iconfont icon-caidan2"></i>
+          <i class="iconfont iconweibiaoti15"></i>
         </div>
       </div>
       <div class="title">改扩建变电站作业区域安全管控平台</div>
       <div class="hd-btns">
         <a class="badge-item" href="#/alarmList" @click="hidbadge">
-          <el-badge
-              :value="alertnum"
-              :max="99"
-              :hidden="hid"
-          >
+          <el-badge :value="alertnum" :max="99" :hidden="hid">
             <img src="@/assets/img/tongzhi.png" alt />
           </el-badge>
           <div class="text">报警信息</div>
         </a>
         <a class="badge-item" href="#/location">
           <img src="@/assets/img/jiankong.png" alt />
-          <div class="text" >实时监控</div>
+          <div class="text">实时监控</div>
         </a>
       </div>
     </el-header>
     <!-- 主体区域 -->
     <el-container>
       <!-- 侧边栏 -->
-      <el-aside :width="isCollapse ? '84px':'230px'">
+      <el-aside :width="isCollapse ? '84px' : '230px'">
         <!-- 一级菜单 -->
         <el-menu
           text-color="#282828"
@@ -44,23 +40,26 @@
           :collapse-transition="false"
           :router="true"
           :default-active="$route.path"
-          class="leftMenu"
         >
-          <el-submenu :index="item.id+''" v-for="item in menuList" :key="item.id">
+          <el-submenu
+            :index="item.id + ''"
+            v-for="item in menuList"
+            :key="item.id"
+          >
             <template slot="title">
               <!-- 图标 -->
               <i :class="iconsObj[item.id]"></i>
               <!-- 文本-->
-              <span>{{item.authName}}</span>
+              <span>{{ item.authName }}</span>
             </template>
             <!-- 二级菜单 -->
             <el-menu-item
-              :index="'/'+subItem.path"
+              :index="'/' + subItem.path"
               v-for="subItem in item.children"
               :key="subItem.id"
               class="subItem"
             >
-              <span slot="title">{{subItem.authName}}</span>
+              <span slot="title">{{ subItem.authName }}</span>
             </el-menu-item>
           </el-submenu>
         </el-menu>
@@ -76,8 +75,8 @@ export default {
   name: "Home",
   data() {
     return {
-      alertnum:2,
-      hid:false,
+      alertnum: 2,
+      hid: false,
       // 菜单导航
       menuList: [
         {
@@ -88,8 +87,8 @@ export default {
               id: 10,
               authName: "员工实时位置",
               path: "location",
-            }
-          ]
+            },
+          ],
         },
         {
           id: 2,
@@ -98,9 +97,9 @@ export default {
             {
               id: 20,
               authName: "人员信息",
-              path: "manManagement"
-            }
-          ]
+              path: "manManagement",
+            },
+          ],
         },
         {
           id: 3,
@@ -110,8 +109,8 @@ export default {
               id: 30,
               authName: "设备信息",
               path: "deviceInformation",
-            }
-          ]
+            },
+          ],
         },
         {
           id: 4,
@@ -120,24 +119,19 @@ export default {
             {
               id: 40,
               authName: "报警列表",
-              path: "alarmList"
+              path: "alarmList",
             },
             {
               id: 41,
-              authName: "告警提醒",
-              path: ""
+              authName: "历史轨迹",
+              path: "pathQuery",
             },
             {
-              id: 42,
-              authName: "历史轨迹查询",
-              path: "pathQuery"
+              id: 43,
+              authName: "历史轨迹列表",
+              path: "pathList",
             },
-            {
-              id: 44,
-              authName: "报警设置",
-              path: ""
-            }
-          ]
+          ],
         },
         {
           id: 5,
@@ -147,37 +141,31 @@ export default {
               id: 50,
               authName: "区域列表",
               path: "regionsList",
-            }
-          ]
+            },
+          ],
         },
         {
           id: 6,
-          authName: "监控视频",
-          path: ""
-        },
-        {
-          id: 7,
           authName: "系统管理",
           children: [
             {
               id: 70,
               authName: "角色管理",
-              path: "roleManagement"
-            }
-          ]
-        }
+              path: "roleManagement",
+            },
+          ],
+        },
       ],
       // 导航图标
       iconsObj: {
-        "1": "iconfont icon-xuanzhongshangcheng",
-        "2": "iconfont icon-zu",
-        "3": "iconfont icon-guanli1",
-        "4": "iconfont icon-chakan",
-        "5": "iconfont icon-quyucopy",
-        "6": "iconfont icon-bofang",
-        "7": "iconfont icon-guanli"
+        "1": "iconfont icontubiao-",
+        "2": "iconfont iconrenyuan",
+        "3": "iconfont iconshebei",
+        "4": "iconfont iconbj",
+        "5": "iconfont iconquyuguanli",
+        "6": "iconfont iconxitong",
       },
-      isCollapse: false
+      isCollapse: false,
     };
   },
   methods: {
@@ -187,21 +175,22 @@ export default {
     },
 
     //控制badge在被点击后隐藏
-    hidbadge(){
-      this.hid=true;
+    hidbadge() {
+      this.hid = true;
     },
-  }
+  },
 };
 </script>
 <style lang="scss">
 .home {
   position: absolute;
   width: 100%;
-  height:100%;
+  height: 100%;
   .el-container {
     height: 100%;
   }
   .el-header {
+    border: 1px solid red;
     background-color: #fff;
     box-shadow: 1px 2px 14px 0 rgba(0, 0, 0, 0.04);
     border-bottom: 2px solid #f6f6f6;
@@ -267,8 +256,8 @@ export default {
           font-size: 12px;
           font-weight: bold;
         }
-        &:hover{
-          .text{
+        &:hover {
+          .text {
             color: #026650;
           }
         }
@@ -297,7 +286,7 @@ export default {
 
   .el-main {
     background-color: #f6f6f6;
-    padding: 0 10px;
+    padding: 0 5px;
   }
 
   .el-submenu .el-menu-item {
@@ -307,9 +296,9 @@ export default {
     padding-left: 60px !important;
 
     &.subItem {
-      background: #f1f7f6;  //二级菜单背景颜色
-      &:hover{
-        background: #EAEAEA;
+      background: #f1f7f6; //二级菜单背景颜色
+      &:hover {
+        background: #eaeaea;
         border-radius: 3px;
       }
     }
@@ -318,7 +307,7 @@ export default {
         color: #01664f;
         position: relative;
         font-weight: bold;
-        font-size: 16px;  //选中的项目字体加粗、放大
+        font-size: 16px; //选中的项目字体加粗、放大
         //text-decoration: underline;  //在选中的项目下添加下划线
         &::before {
           content: "";

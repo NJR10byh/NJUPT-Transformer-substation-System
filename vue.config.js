@@ -1,23 +1,4 @@
-module.exports = {
-  configureWebpack: {
-    resolve: {
-      alias: {
-        'assets': '@/assets',
-        'common': '@/common',
-        'components': '@/components',
-        'network': '@/network',
-        'view': '@/view',
-      }
-    }
-  }
-}
-
-// const BundleTracker = require("webpack-bundle-tracker");
 // module.exports = {
-//   // 如果不在windows环境请试下: "http://0.0.0.0:8080/"
-//   publicPath: "http://0.0.0.0:8080/",
-//   outputDir: "./dist/",
-//
 //   configureWebpack: {
 //     resolve: {
 //       alias: {
@@ -28,7 +9,28 @@ module.exports = {
 //         'view': '@/view',
 //       }
 //     }
-//   },
+//   }
+// }
+
+//const BundleTracker = require("webpack-bundle-tracker");
+module.exports = {
+  publicPath: "./",  //基本路径
+  outputDir: "./dist/", //打包时的输出目录
+  assetsDir: "static",  //放置静态资源的目录
+  indexPath: "index.html", //html的输出路径
+
+  configureWebpack: {
+    resolve: {
+      alias: {
+        'assets': '@/assets',
+        'common': '@/common',
+        'components': '@/components',
+        'network': '@/network',
+        'view': '@/view',
+      }
+    }
+  },
+}
 //   chainWebpack: (config) => {
 //     config
 //         .plugin("BundleTracker")

@@ -10,7 +10,10 @@
       <div class="header-search">
         <el-form :inline="true" :model="formInline" class="demo-form-inline">
           <el-form-item label>
-            <el-input v-model="formInline.person" placeholder="请输入搜索人员"></el-input>
+            <el-input
+              v-model="formInline.person"
+              placeholder="请输入搜索人员"
+            ></el-input>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" icon="el-icon-search">搜索</el-button>
@@ -18,13 +21,19 @@
         </el-form>
 
         <div class="oper-btns">
+          <el-button class="test" @click="test">获取测试</el-button>
           <el-button
             class="add-btn"
             icon="el-icon-circle-plus-outline"
             @click="dialogFormVisible = true"
-          >新增</el-button>
-          <el-button class="bigdel-btn" icon="el-icon-delete" @click="delectAll">批量删除</el-button>
-          <el-button class="clear-btn" icon="el-icon-delete" @click="Clear">清空</el-button>
+            >新增</el-button
+          >
+          <el-button class="bigdel-btn" icon="el-icon-delete" @click="delectAll"
+            >批量删除</el-button
+          >
+          <el-button class="clear-btn" icon="el-icon-delete" @click="Clear"
+            >清空</el-button
+          >
         </div>
       </div>
       <!-- table -->
@@ -37,23 +46,41 @@
         style="width: 100%"
         @selection-change="handleDetailSelectionChange"
       >
-        <el-table-column type="selection" width="44"></el-table-column>
-        <el-table-column prop="id" label="ID" width="44"></el-table-column>
-        <el-table-column prop="company" label="公司" width="240"></el-table-column>
-        <el-table-column prop="name" label="姓名" width></el-table-column>
-        <el-table-column prop="number" label="工号"></el-table-column>
-        <el-table-column prop="tel" label="联系电话" width="150"></el-table-column>
-        <el-table-column prop="type" label="人员类型"></el-table-column>
-        <el-table-column prop="setting" label="设置" width="120">
+        <el-table-column type="selection" width="42"></el-table-column>
+        <el-table-column prop="id" label="ID" width="42"></el-table-column>
+        <el-table-column prop="name" label="姓名" width="70"></el-table-column>
+        <el-table-column
+          prop="number"
+          label="工号"
+          width="90"
+        ></el-table-column>
+        <el-table-column prop="sex" label="性别" width="70"></el-table-column>
+        <el-table-column prop="birth" label="出生日期"></el-table-column>
+        <el-table-column
+          prop="tel"
+          label="联系方式"
+          width="110"
+        ></el-table-column>
+        <el-table-column
+          prop="address"
+          label="家庭住址"
+          width="170"
+        ></el-table-column>
+        <el-table-column prop="post" label="岗位" width="110"></el-table-column>
+        <el-table-column
+          prop="onboardingtime"
+          label="入职时间"
+        ></el-table-column>
+        <el-table-column prop="settings" label="设置" width="95">
           <template slot-scope="scope">
             <el-button
               class="edit-btn"
-              icon="iconfont icon-weibiaoti2"
+              icon="iconfont iconbianji"
               @click="handleEdit(scope.$index, scope.row)"
             ></el-button>
             <el-button
               class="del-btn"
-              icon="iconfont icon-shanchu"
+              icon="iconfont iconshanchu"
               @click="handleDelete(scope.$index)"
             ></el-button>
           </template>
@@ -72,45 +99,110 @@
         ></el-pagination>
       </div>
       <!-- 新增弹窗 -->
-      <el-dialog title="新增人员" class="addManDialog" :visible.sync="dialogFormVisible">
+      <el-dialog
+        title="新增人员"
+        class="addManDialog"
+        :visible.sync="dialogFormVisible"
+      >
         <el-form :model="form" :rules="rules" ref="form">
-          <el-form-item label="公司名称" prop="company" :label-width="formLabelWidth">
-            <el-input v-model="form.company" placeholder="请输入" autocomplete="off" :clearable="true"></el-input>
-          </el-form-item>
           <el-form-item label="姓名" prop="name" :label-width="formLabelWidth">
-            <el-input v-model="form.name" placeholder="请输入" autocomplete="off" :clearable="true"></el-input>
+            <el-input
+              v-model="form.name"
+              placeholder="请输入"
+              autocomplete="off"
+              :clearable="true"
+            ></el-input>
           </el-form-item>
-          <el-form-item label="工号" prop="number" :label-width="formLabelWidth">
-            <el-input v-model="form.number" placeholder="请输入" autocomplete="off" :clearable="true"></el-input>
+          <el-form-item
+            label="工号"
+            prop="number"
+            :label-width="formLabelWidth"
+          >
+            <el-input
+              v-model="form.number"
+              placeholder="请输入"
+              autocomplete="off"
+              :clearable="true"
+            ></el-input>
           </el-form-item>
-          <el-form-item label="联系电话" prop="tel" :label-width="formLabelWidth">
-            <el-input v-model="form.tel" placeholder="请输入" autocomplete="off" :clearable="true"></el-input>
-          </el-form-item>
-<!--          <el-form-item label="性别" prop="sex" :label-width="formLabelWidth">-->
-<!--            <el-select v-model="form.sex" placeholder="请选择性别">-->
-<!--              <el-option label="男" value="男"></el-option>-->
-<!--              <el-option label="女" value="女"></el-option>-->
-<!--            </el-select>-->
-<!--          </el-form-item>-->
-          <el-form-item label="人员类型" prop="type" :label-width="formLabelWidth">
-            <el-select v-model="form.type" placeholder="请选择">
-              <el-option label="类型一" value="类型一"></el-option>
-              <el-option label="类型二" value="类型二"></el-option>
+          <el-form-item label="性别" prop="sex" :label-width="formLabelWidth">
+            <el-select v-model="form.sex" placeholder="请选择性别">
+              <el-option label="男" value="男"></el-option>
+              <el-option label="女" value="女"></el-option>
             </el-select>
           </el-form-item>
-<!--          <el-form-item label="小数位数" prop="places" :label-width="formLabelWidth">-->
-<!--            <el-input type="number" v-model="form.places" placeholder="1" autocomplete="off"></el-input>-->
-<!--          </el-form-item>-->
+          <el-form-item
+            label="出生日期"
+            prop="birth"
+            :label-width="formLabelWidth"
+          >
+            <el-input
+              v-model="form.birth"
+              placeholder="请输入"
+              autocomplete="off"
+              :clearable="true"
+            ></el-input>
+          </el-form-item>
+          <el-form-item
+            label="联系电话"
+            prop="tel"
+            :label-width="formLabelWidth"
+          >
+            <el-input
+              v-model="form.tel"
+              placeholder="请输入"
+              autocomplete="off"
+              :clearable="true"
+            ></el-input>
+          </el-form-item>
+          <el-form-item
+            label="家庭住址"
+            prop="address"
+            :label-width="formLabelWidth"
+          >
+            <el-input
+              v-model="form.address"
+              placeholder="请输入"
+              autocomplete="off"
+              :clearable="true"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="岗位" prop="post" :label-width="formLabelWidth">
+            <el-input
+              v-model="form.post"
+              placeholder="请输入"
+              autocomplete="off"
+              :clearable="true"
+            ></el-input>
+          </el-form-item>
+          <el-form-item
+            label="入职时间"
+            prop="onboardingtime"
+            :label-width="formLabelWidth"
+          >
+            <el-input
+              v-model="form.onboardingtime"
+              placeholder="请输入"
+              autocomplete="off"
+              :clearable="true"
+            ></el-input>
+          </el-form-item>
+          <!--          <el-form-item label="人员类型" prop="type" :label-width="formLabelWidth">-->
+          <!--            <el-select v-model="form.type" placeholder="请选择">-->
+          <!--              <el-option label="类型一" value="类型一"></el-option>-->
+          <!--              <el-option label="类型二" value="类型二"></el-option>-->
+          <!--            </el-select>-->
+          <!--          </el-form-item>-->
+          <!--          <el-form-item label="小数位数" prop="places" :label-width="formLabelWidth">-->
+          <!--            <el-input type="number" v-model="form.places" placeholder="1" autocomplete="off"></el-input>-->
+          <!--          </el-form-item>-->
 
-<!--          <el-form-item label="备注" prop="des" :label-width="formLabelWidth">-->
-<!--            <el-input type="textarea" v-model="form.desc"></el-input>-->
-<!--          </el-form-item>-->
+          <!--          <el-form-item label="备注" prop="des" :label-width="formLabelWidth">-->
+          <!--            <el-input type="textarea" v-model="form.desc"></el-input>-->
+          <!--          </el-form-item>-->
           <el-form-item :label-width="formLabelWidth">
-            <el-button
-                class="sub-btn"
-                type="primary"
-                @click="submitForm(form)"
-            >确认提交
+            <el-button class="sub-btn" type="primary" @click="submitForm(form)"
+              >确认提交
             </el-button>
           </el-form-item>
         </el-form>
@@ -120,36 +212,43 @@
 </template>
 
 <script>
+import axios from "axios";
 export default {
   name: "ManManagement",
   components: {},
   data() {
     return {
       formInline: {
-        person: ""
+        person: "",
       },
       //新增功能 v-model 需要的data
       form: {},
       //选择框
-      checkedDetail:[],
+      checkedDetail: [],
       // 表格数据
       tableData: [
         {
           id: "1",
-          company: "东晟原绿家居建材有限公司",
-          name: "admin",
-          number: "112323",
+          number: "1001",
+          name: "张三",
+          sex: "男",
+          birth: "1975.12.9",
           tel: "13509876543",
-          type: "收取",
+          address: "文苑路九号",
+          post: "接线员",
+          onboardingtime: "2020.2.3",
         },
         {
           id: "2",
-          company: "东晟原绿家居建材有限公司",
-          name: "admin",
-          number: "112323",
-          tel: "13509876543",
-          type: "不收取",
-        }
+          number: "1002",
+          name: "李四",
+          sex: "男",
+          birth: "1973.9.9",
+          tel: "13509876343",
+          address: "文苑路九号",
+          post: "接线员",
+          onboardingtime: "2020.2.6",
+        },
       ],
       multipleSelection: [],
       // 分页
@@ -159,17 +258,17 @@ export default {
       rules: {
         number: [
           { required: true, message: "请输入工号", trigger: "blur" },
-          { min: 3, max: 5, message: "长度在 3 到 5 个字符", trigger: "blur" }
+          { min: 3, max: 5, message: "长度在 3 到 5 个字符", trigger: "blur" },
         ],
         name: [
           { required: true, message: "请输入名字", trigger: "blur" },
-          { min: 3, max: 5, message: "长度在 3 到 5 个字符", trigger: "blur" }
+          { min: 3, max: 5, message: "长度在 3 到 5 个字符", trigger: "blur" },
         ],
         sex: [{ required: true, message: "请选择性别", trigger: "change" }],
         type: [{ required: true, message: "请选择类型", trigger: "change" }],
-        places: [{ required: true, message: "请输入", trigger: "blur" }]
+        places: [{ required: true, message: "请输入", trigger: "blur" }],
       },
-      formLabelWidth: "100px"
+      formLabelWidth: "100px",
     };
   },
   computed: {},
@@ -185,48 +284,52 @@ export default {
     },
     // 删除单个行
     handleDelete(index) {
-      this.$confirm('删除后无法更改, 是否确定?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        this.tableData.splice(index, 1);
-      }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: '已取消删除'
+      this.$confirm("删除后无法更改, 是否确定?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(() => {
+          this.tableData.splice(index, 1);
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消删除",
+          });
         });
-      });
     },
     //批量删除
-    delectAll(){
+    delectAll() {
       for (let i = 0; i < this.tableData.length; i++) {
         const element = this.tableData[i];
-        element.id = i+1;
+        element.id = i + 1;
       }
       if (this.checkedDetail.length == 0) {
-        this.$alert("请先选择要删除的数据","提示",{
-          confirmButtonText:"确定",
+        this.$alert("请先选择要删除的数据", "提示", {
+          confirmButtonText: "确定",
         });
       } else {
-        this.$confirm('删除后无法更改, 是否确定?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          this.checkedDetail.forEach(element => {
-            this.tableData.forEach((e, i) => {
-              if (element.id == e.id) {
-                this.tableData.splice(i, 1);
-              }
+        this.$confirm("删除后无法更改, 是否确定?", "提示", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning",
+        })
+          .then(() => {
+            this.checkedDetail.forEach((element) => {
+              this.tableData.forEach((e, i) => {
+                if (element.id == e.id) {
+                  this.tableData.splice(i, 1);
+                }
+              });
+            });
+          })
+          .catch(() => {
+            this.$message({
+              type: "info",
+              message: "已取消删除",
             });
           });
-        }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消删除'
-          });
-        });
       }
     },
     // 表格方法
@@ -239,48 +342,107 @@ export default {
 
     //新增人员
     submitForm(formName) {
-      let idnum=this.tableData.length+1;
-      let obj={};
-      obj.id=idnum;
-      obj.company=formName.company;
-      obj.name=formName.name;
-      obj.number=formName.number;
-      obj.tel=formName.tel;
-      obj.type=formName.type;
-      //console.log(obj.type);
-      if(
-          obj.company==undefined||
-          obj.id==undefined||
-          obj.name==undefined||
-          obj.number==undefined||
-          obj.tel==undefined||
-          obj.type==""){
-        this.$alert("请将信息填写完整","提示", {
+      let idnum = this.tableData.length + 1;
+      let obj = {};
+      obj.id = idnum;
+      obj.name = formName.name;
+      obj.number = formName.number;
+      obj.sex = formName.sex;
+      obj.birth = formName.birth;
+      obj.tel = formName.tel;
+      obj.address = formName.address;
+      obj.post = formName.post;
+      obj.onboardingtime = formName.onboardingtime;
+      if (
+        obj.id == undefined ||
+        obj.name == undefined ||
+        obj.number == undefined ||
+        obj.sex == undefined ||
+        obj.birth == undefined ||
+        obj.tel == undefined ||
+        obj.address == undefined ||
+        obj.post == undefined ||
+        obj.onboardingtime == undefined
+      ) {
+        this.$alert("请将信息填写完整", "提示", {
           confirmButtonText: "确定",
-        })
-      }else {
+        });
+      } else {
         this.tableData.push(obj);
       }
     },
-    //清空List
-    Clear(){
-      this.$confirm('清空后无法恢复, 是否确定?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        this.tableData=undefined;
-      }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: '已取消删除'
+    //测试接口
+    test() {
+      let idnum = this.tableData.length + 1;
+      let obj = {};
+      let flag = false;
+      let that = this;
+      axios({
+        method: "get",
+        url: "http://120.26.234.200:8080/member",
+      })
+        .then(function(result) {
+          flag = !flag;
+          console.log(result.data.data[0].fields.sex);
+          if (!isNaN(result.data.data[0].fields.sex)) {
+            if (result.data.data[0].fields.sex.toString() == "1") {
+              obj.sex = "男";
+            } else if (result.data.data[0].fields.sex.toString() == "0") {
+              obj.sex = "女";
+            }
+          }
+          obj.id = idnum;
+          obj.name = result.data.data[0].fields.name;
+          obj.number = result.data.data[0].fields.number;
+          obj.birth = result.data.data[0].fields.birth;
+          obj.tel = result.data.data[0].fields.tel;
+          obj.address = result.data.data[0].fields.address;
+          obj.post = result.data.data[0].fields.post;
+          obj.onboardingtime = result.data.data[0].fields.onboardingtime;
+          if (
+            obj.id == undefined ||
+            obj.name == undefined ||
+            obj.number == undefined ||
+            obj.sex == undefined ||
+            obj.birth == undefined ||
+            obj.tel == undefined ||
+            obj.address == undefined ||
+            obj.post == undefined ||
+            obj.onboardingtime == undefined
+          ) {
+            this.$alert("请将信息填写完整", "提示", {
+              confirmButtonText: "确定",
+            });
+          } else {
+            that.tableData.push(obj);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+          console.log("请求失败: " + err.status + "," + err.statusText);
+          //console.log(this.tableData);
         });
-      });
-    }
-
+    },
+    //清空List
+    Clear() {
+      this.$confirm("清空后无法恢复, 是否确定?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(() => {
+          this.tableData = undefined;
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消删除",
+          });
+        });
+    },
   },
   created() {},
-  mounted() {}
+  mounted() {},
 };
 </script>
 <style lang="scss">
@@ -290,7 +452,7 @@ export default {
 .main {
   height: 100%;
   .breadcrumb {
-    height: 60px;
+    height: 55px;
     line-height: 60px;
     overflow: hidden;
     font-size: 16px;
@@ -354,6 +516,11 @@ export default {
         height: 30px;
         border-radius: 4px;
         font-size: 12px;
+        &.test {
+          width: 70px;
+          border: 1px solid #239679;
+          color: #01664f;
+        }
         &.add-btn {
           width: 70px;
           border: 1px solid #239679;
@@ -364,7 +531,7 @@ export default {
           border: 1px solid #f96b6c;
           color: #f96b6c;
         }
-        &.bigdel-btn:hover{
+        &.bigdel-btn:hover {
           background: #ffcccc;
         }
         &.clear-btn {
@@ -373,7 +540,7 @@ export default {
           color: #f96b6c;
           margin-left: 10px;
         }
-        &.clear-btn:hover{
+        &.clear-btn:hover {
           background: #ffcccc;
         }
       }
@@ -454,7 +621,7 @@ export default {
 .addManDialog {
   .el-dialog {
     max-width: 500px;
-    height: 460px;
+    height: 660px;
     box-shadow: 0px 2px 14px 0px rgba(0, 0, 0, 0.1);
     border-radius: 6px;
     .el-dialog__header {

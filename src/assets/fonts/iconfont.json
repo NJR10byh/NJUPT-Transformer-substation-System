@@ -1,149 +1,128 @@
 {
-  "id": "2075208",
-  "name": "变电站",
+  "id": "2224602",
+  "name": "bdzproject",
   "font_family": "iconfont",
-  "css_prefix_text": "icon-",
+  "css_prefix_text": "icon",
   "description": "",
   "glyphs": [
     {
-      "icon_id": "11105419",
-      "name": "人员",
-      "font_class": "zu",
-      "unicode": "e653",
-      "unicode_decimal": 58963
+      "icon_id": "593487",
+      "name": "菜单",
+      "font_class": "weibiaoti15",
+      "unicode": "e621",
+      "unicode_decimal": 58913
     },
     {
-      "icon_id": "486991",
-      "name": "查看",
-      "font_class": "chakan",
-      "unicode": "e6ba",
-      "unicode_decimal": 59066
-    },
-    {
-      "icon_id": "1162890",
-      "name": "播放",
-      "font_class": "bofang",
-      "unicode": "e8d8",
-      "unicode_decimal": 59608
-    },
-    {
-      "icon_id": "1235124",
-      "name": "编辑",
-      "font_class": "weibiaoti2",
+      "icon_id": "1037749",
+      "name": "菜单",
+      "font_class": "caidan",
       "unicode": "e62a",
       "unicode_decimal": 58922
     },
     {
-      "icon_id": "1899353",
-      "name": "管理",
-      "font_class": "guanli",
-      "unicode": "e62d",
-      "unicode_decimal": 58925
+      "icon_id": "1620821",
+      "name": "主页",
+      "font_class": "tubiao-",
+      "unicode": "e623",
+      "unicode_decimal": 58915
     },
     {
-      "icon_id": "2240617",
-      "name": "搜索",
-      "font_class": "sousuo",
-      "unicode": "e603",
-      "unicode_decimal": 58883
+      "icon_id": "4236624",
+      "name": "全屏",
+      "font_class": "quanping",
+      "unicode": "e607",
+      "unicode_decimal": 58887
     },
     {
-      "icon_id": "3234880",
-      "name": "右箭头",
-      "font_class": "youjiantou",
-      "unicode": "e61f",
-      "unicode_decimal": 58911
+      "icon_id": "4736054",
+      "name": "编辑",
+      "font_class": "bianji",
+      "unicode": "e60d",
+      "unicode_decimal": 58893
     },
     {
-      "icon_id": "3351381",
-      "name": "新增",
-      "font_class": "xinzeng",
-      "unicode": "e725",
-      "unicode_decimal": 59173
+      "icon_id": "7677938",
+      "name": "设备",
+      "font_class": "shebei",
+      "unicode": "e617",
+      "unicode_decimal": 58903
     },
     {
-      "icon_id": "3423125",
-      "name": "还原",
-      "font_class": "tubiaoku-",
+      "icon_id": "8870953",
+      "name": "系统",
+      "font_class": "xitong",
+      "unicode": "e62c",
+      "unicode_decimal": 58924
+    },
+    {
+      "icon_id": "8949026",
+      "name": "人员",
+      "font_class": "renyuan",
+      "unicode": "e65e",
+      "unicode_decimal": 58974
+    },
+    {
+      "icon_id": "9923738",
+      "name": "区域管理",
+      "font_class": "quyuguanli",
+      "unicode": "e60e",
+      "unicode_decimal": 58894
+    },
+    {
+      "icon_id": "12686558",
+      "name": "监控",
+      "font_class": "icon_jiankong-",
+      "unicode": "e63b",
+      "unicode_decimal": 58939
+    },
+    {
+      "icon_id": "13637014",
+      "name": "删除",
+      "font_class": "shanchu",
+      "unicode": "e650",
+      "unicode_decimal": 58960
+    },
+    {
+      "icon_id": "14698909",
+      "name": "报警",
+      "font_class": "bj",
+      "unicode": "e606",
+      "unicode_decimal": 58886
+    },
+    {
+      "icon_id": "15267750",
+      "name": "报警",
+      "font_class": "baojing",
+      "unicode": "e608",
+      "unicode_decimal": 58888
+    },
+    {
+      "icon_id": "17544302",
+      "name": "回到顶部",
+      "font_class": "huidaodingbu",
+      "unicode": "e6fd",
+      "unicode_decimal": 59133
+    },
+    {
+      "icon_id": "2778050",
+      "name": "转移路线",
+      "font_class": "zhuanyiluxian",
       "unicode": "e657",
       "unicode_decimal": 58967
     },
     {
-      "icon_id": "3452224",
-      "name": "回到顶部",
-      "font_class": "huidaodingbu",
-      "unicode": "e601",
-      "unicode_decimal": 58881
-    },
-    {
-      "icon_id": "6092879",
-      "name": "管理",
-      "font_class": "gl",
-      "unicode": "e6ae",
-      "unicode_decimal": 59054
-    },
-    {
-      "icon_id": "7926470",
-      "name": "删 除",
-      "font_class": "shanchu",
-      "unicode": "e604",
-      "unicode_decimal": 58884
-    },
-    {
-      "icon_id": "8636196",
-      "name": "全屏",
-      "font_class": "quanping",
-      "unicode": "e679",
-      "unicode_decimal": 59001
-    },
-    {
-      "icon_id": "8804790",
-      "name": "区域 copy",
-      "font_class": "quyucopy",
-      "unicode": "e602",
-      "unicode_decimal": 58882
-    },
-    {
-      "icon_id": "9782912",
-      "name": "菜单",
-      "font_class": "caidan2",
-      "unicode": "e614",
-      "unicode_decimal": 58900
-    },
-    {
-      "icon_id": "9824705",
-      "name": "管理",
-      "font_class": "guanli1",
-      "unicode": "e67e",
-      "unicode_decimal": 59006
-    },
-    {
-      "icon_id": "11697919",
-      "name": "监控",
-      "font_class": "jiankong3",
-      "unicode": "e600",
-      "unicode_decimal": 58880
-    },
-    {
-      "icon_id": "12060100",
-      "name": "home",
-      "font_class": "xuanzhongshangcheng",
-      "unicode": "e605",
-      "unicode_decimal": 58885
-    },
-    {
-      "icon_id": "13031984",
-      "name": "报警",
-      "font_class": "baojing",
+      "icon_id": "8314485",
+      "name": "轨迹 路线 导航",
+      "font_class": "wulianwang-",
       "unicode": "e60b",
       "unicode_decimal": 58891
     },
     {
-      "icon_id": "16380712",
-      "name": "关  闭",
-      "font_class": "guanbi",
-      "unicode": "e706",
-      "unicode_decimal": 59142
+      "icon_id": "9626897",
+      "name": "路线",
+      "font_class": "luxian",
+      "unicode": "e874",
+      "unicode_decimal": 59508
     }
   ]
 }

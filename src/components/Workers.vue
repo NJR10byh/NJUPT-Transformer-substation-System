@@ -1,33 +1,33 @@
 <template>
   <fullscreen class="map-box" ref="fullscreen" @change="fullscreenChange">
     <baidu-map
-        class="map"
-        :center="{ lng: 118.937284, lat: 32.119823 }"
-        :zoom="16"
-        :scroll-wheel-zoom="true"
-        :map-click="false"
+      class="map"
+      :center="{ lng: 118.937284, lat: 32.119823 }"
+      :zoom="16"
+      :scroll-wheel-zoom="true"
+      :map-click="false"
     >
       <div v-for="(marker, index) of markers" :key="index">
         <bm-marker
-            :position="{ lng: marker.lng, lat: marker.lat }"
-            :title="marker.name"
-            :mass-clear="false"
-            :dragging="false"
-            animation="BMAP_ANIMATION_DROP"
-            @click="infoWindowOpen(marker)"
-            @mouseover="infoWindowOpen(marker)"
-            :icon="
+          :position="{ lng: marker.lng, lat: marker.lat }"
+          :title="marker.name"
+          :mass-clear="false"
+          :dragging="false"
+          animation="BMAP_ANIMATION_DROP"
+          @click="infoWindowOpen(marker)"
+          @mouseover="infoWindowOpen(marker)"
+          :icon="
             marker.showFlag
               ? { url: marker.iconOn, size: { width: 40, height: 40 } }
               : { url: marker.icon, size: { width: 40, height: 40 } }
           "
         >
           <bm-info-window
-              title="人员信息"
-              :position="{ lng: marker.lng, lat: marker.lat }"
-              :show="marker.showFlag"
-              @close="infoWindowClose(marker)"
-              @open="infoWindowOpen(marker)"
+            title="人员信息"
+            :position="{ lng: marker.lng, lat: marker.lat }"
+            :show="marker.showFlag"
+            @close="infoWindowClose(marker)"
+            @open="infoWindowOpen(marker)"
           >
             <ul class="info">
               <li>
@@ -55,16 +55,19 @@
                 <span>{{ marker.lat }}</span>
               </li>
               <li>
-                <button style="float:right;margin-top:5px;font-size:14px;width:70px;height:20px" @click="Path(marker)">
-                  {{marker.following?"停止跟踪":"开始跟踪"}}
+                <button
+                  style="float:right;margin-top:5px;font-size:14px;width:70px;height:20px"
+                  @click="Path(marker)"
+                >
+                  {{ marker.following ? "停止跟踪" : "开始跟踪" }}
                 </button>
               </li>
             </ul>
           </bm-info-window>
           <bm-label
-              :content="marker.nameInfo"
-              :position="{ lng: marker.lng, lat: marker.lat }"
-              :labelStyle="{
+            :content="marker.nameInfo"
+            :position="{ lng: marker.lng, lat: marker.lat }"
+            :labelStyle="{
               color: '#282828',
               fontSize: '12px',
               border: 'none',
@@ -74,18 +77,18 @@
               display: 'block',
               left: '50%',
               transform: 'translateX(-14%)',
-              textShadow: '0px 2px 14px rgba(0, 0, 0, 0.1)'
+              textShadow: '0px 2px 14px rgba(0, 0, 0, 0.1)',
             }"
           />
         </bm-marker>
-<!--        <bm-polyline-->
-<!--            :path="Pathhistory.paths"-->
-<!--            stroke-color="red"-->
-<!--            :stroke-opacity="0.5"-->
-<!--            :stroke-weight="2"-->
-<!--            :editing="false"-->
-<!--        >-->
-<!--        </bm-polyline>-->
+        <!--        <bm-polyline-->
+        <!--            :path="Pathhistory.paths"-->
+        <!--            stroke-color="red"-->
+        <!--            :stroke-opacity="0.5"-->
+        <!--            :stroke-weight="2"-->
+        <!--            :editing="false"-->
+        <!--        >-->
+        <!--        </bm-polyline>-->
       </div>
     </baidu-map>
     <!-- 控件 -->
@@ -108,39 +111,39 @@ export default {
       zoom: 16,
       show: false,
       btnShow: true,
-      i:0,
-      timer:null,
-      lushuicon:{
+      i: 0,
+      timer: null,
+      lushuicon: {
         url: require("../assets/img/dot.png"),
-        size: { width: 40, height: 40}
+        size: { width: 40, height: 40 },
       },
       Pathhistory: {
-        paths1:[
+        paths1: [
           {
-            lng:118.940477,
-            lat:32.123612,
+            lng: 118.940477,
+            lat: 32.123612,
           },
           {
-            lng:118.938932,
-            lat:32.122909,
+            lng: 118.938932,
+            lat: 32.122909,
           },
           {
-            lng:118.939507,
-            lat:32.121563,
+            lng: 118.939507,
+            lat: 32.121563,
           },
           {
-            lng:118.939651,
-            lat:32.119912,
+            lng: 118.939651,
+            lat: 32.119912,
           },
           {
-            lng:118.93904,
-            lat:32.11719,
+            lng: 118.93904,
+            lat: 32.11719,
           },
           {
             lng: 118.939866,
             lat: 32.115661,
-          }
-        ]
+          },
+        ],
       },
       markers: [
         {
@@ -155,7 +158,7 @@ export default {
           eq: "adsdsfasf",
           area: "南京邮电大学仙林校区南一食堂",
           showFlag: false, //flag放在每一条数据里
-          following:false
+          following: false,
         },
         //人员二:
         {
@@ -169,8 +172,8 @@ export default {
           eq: "5345466",
           area: "南京邮电大学仙林校区图书馆",
           showFlag: false,
-          following:false
-        }
+          following: false,
+        },
       ],
       fullscreen: false,
       // 悬浮框data
@@ -188,24 +191,24 @@ export default {
       marker.showFlag = true;
     },
     //实时路径+越界警报
-    Path(marker){
-      marker.following=!marker.following;
+    Path(marker) {
+      marker.following = !marker.following;
       const that = this;
-      if(!marker.following){
+      if (!marker.following) {
         clearInterval(that.timer); //停止跟踪，关闭定时器
       }
       //跟踪
-      else if(marker.following){
-        that.timer=setInterval(function (){
-          if(that.i<that.Pathhistory.paths1.length){
-            marker.lng=that.Pathhistory.paths1[that.i].lng;
-            marker.lat=that.Pathhistory.paths1[that.i].lat;
-            if(marker.lat<32.12){
+      else if (marker.following) {
+        that.timer = setInterval(function() {
+          if (that.i < that.Pathhistory.paths1.length) {
+            marker.lng = that.Pathhistory.paths1[that.i].lng;
+            marker.lat = that.Pathhistory.paths1[that.i].lat;
+            if (marker.lat < 32.12) {
               alert("越界！！！");
             }
             that.i++;
           }
-        },2000);
+        }, 500);
       }
     },
     putUp() {
@@ -228,11 +231,11 @@ export default {
     // 全屏方法
     isFullScreen() {
       return (
-          document.fullscreenEnabled ||
-          document.mozFullScreenEnabled ||
-          document.webkitFullscreenEnabled ||
-          document.msFullscreenEnabled ||
-          false
+        document.fullscreenEnabled ||
+        document.mozFullScreenEnabled ||
+        document.webkitFullscreenEnabled ||
+        document.msFullscreenEnabled ||
+        false
       );
     },
     //全屏
@@ -278,12 +281,12 @@ export default {
     closeShowModal2() {
       this.showModal2 = false;
       this.isActive2 = true;
-    }
+    },
   },
   mounted() {
     window.addEventListener("keydown", this.getKeyDown);
   },
-  created() {}
+  created() {},
 };
 </script>
 <style lang="scss">

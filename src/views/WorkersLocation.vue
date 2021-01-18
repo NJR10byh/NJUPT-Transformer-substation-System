@@ -3,32 +3,40 @@
     <div class="header">
       <el-form :inline="true" :model="formInline" class="demo-form-inline">
         <el-form-item>
-          <el-select v-model="formInline.overall" clearable placeholder="全局展示">
+          <el-select
+            v-model="formInline.overall"
+            clearable
+            placeholder="全局展示"
+          >
             <el-option label="全局一" value="全局一"></el-option>
             <el-option label="全局二" value="全局二"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-select v-model="formInline.region" clearable placeholder="区域查看">
+          <el-select
+            v-model="formInline.region"
+            clearable
+            placeholder="区域查看"
+          >
             <el-option label="区域一" value="区域一"></el-option>
             <el-option label="区域二" value="区域二"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item style="margin-right:0">
           <el-input
-              class="input-text"
-              v-model="formInline.person"
-              placeholder="请搜索人员(英文名须严格大小写)"
-              @keyup.enter.native="onSubmit"
+            class="input-text"
+            v-model="formInline.person"
+            placeholder="请搜索人员(英文名须严格大小写)"
+            @keyup.enter.native="onSubmit"
           ></el-input>
         </el-form-item>
         <el-form-item>
           <el-button
-              type="primary"
-              icon="el-icon-search"
-              class="cx-btn"
-              @click="onSubmit"
-          >搜索</el-button
+            type="primary"
+            icon="el-icon-search"
+            class="cx-btn"
+            @click="onSubmit"
+            >搜索</el-button
           >
         </el-form-item>
       </el-form>
@@ -39,23 +47,33 @@
     </div>
     <!-- 地图 -->
     <div class="map-wrap">
-      <Workers ref="MAP"></Workers>
+      <!-- <Workers ref="MAP"></Workers> -->
+      <!-- <iframe src="http://120.26.234.200/website/django/app/webmodel/webmodel/test.html" width="100%" height="100%" frameborder="0">
+       您的浏览器不支持iframe，请升级
+     </iframe>  -->
+      <iframe
+        src="http://localhost:8080/webmodel/test.html"
+        width="100%"
+        height="100%"
+        frameborder="0"
+      ></iframe>
     </div>
   </div>
 </template>
 
 <script>
 import nowTime from "../components/Timer"; //时间
-import Workers from "../components/Workers"; //地图
+//import Workers from "../components/Workers"; //地图
 export default {
   name: "WorkersLocation",
-  components: { nowTime, Workers },
+  components: { nowTime },
+  //components: { nowTime, Workers },
   data() {
     return {
       formInline: {
         overall: "",
         region: "",
-        person: ""
+        person: "",
       },
       hoursTip: "AM",
     };
@@ -63,16 +81,16 @@ export default {
   methods: {
     // 搜索
     onSubmit() {
-      let flag=false; //判断员工是否找到
+      let flag = false; //判断员工是否找到
       //console.log(this.$refs.MAP.markers[0].name);
       /*Vue组件间的调用*/
-      for(let i=0;i<this.$refs.MAP.markers.length;i++){
-        if(this.$data.formInline.person==this.$refs.MAP.markers[i].name){
-          this.$refs.MAP.markers[i].showFlag=true;
-          flag=true;
+      for (let i = 0; i < this.$refs.MAP.markers.length; i++) {
+        if (this.$data.formInline.person == this.$refs.MAP.markers[i].name) {
+          this.$refs.MAP.markers[i].showFlag = true;
+          flag = true;
         }
       }
-      if(!flag){
+      if (!flag) {
         alert("未找到此员工!!!");
       }
     },
@@ -87,11 +105,12 @@ export default {
       } else {
         self.hoursTip = "PM";
       }
-    }
+    },
   },
-  created() {     //在计时器生命周期内执行
+  created() {
+    //在计时器生命周期内执行
     this.getMycount();
-  }
+  },
 };
 </script>
 <style lang="scss">
@@ -369,10 +388,9 @@ export default {
   }
 }
 .map-wrap {
-  background: #ccc;
+  background: #fff;
   height: calc(100% - 52px);
   position: relative;
   overflow: hidden;
 }
-
 </style>

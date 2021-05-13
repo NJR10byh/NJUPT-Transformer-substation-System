@@ -1,914 +1,1708 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <style type="text/css">
-      html,
-      body {
-        margin: 0;
-      }
 
-      canvas {
-        display: block;
-      }
-      .top {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-      }
-      button {
-        width: 60px;
-        height: 25px;
-        margin-left: 20px;
-      }
-      input {
-        height: 10px;
-        padding: 5px;
-      }
-      span {
-        font-size: 30px;
-        font-weight: bold;
-      }
-    </style>
-    <script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>
-    <!-- jQuery备用CDN -->
-    <!-- <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script> -->
-  </head>
-  <body>
-    <div class="top">
-      <!-- <span>人员姓名：</span>
+<head>
+  <meta charset="UTF-8" />
+  <!-- <script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script> -->
+  <!-- jQuery备用CDN -->
+  <!-- <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script> -->
+  <script src="js/jquery-3.1.1.js"></script>
+  <script src="js/bootstrap.js"></script>
+  <script src="js/adapter.js"></script>
+  <script src="js/platform.js"></script>
+  <script src="js/h5splayer.js"></script>
+  <script src="js/h5splayerhelper.js"></script>
+  <link rel="stylesheet" type="text/css" href="css/h5splayer.css" />
+  <style type="text/css">
+    html,
+    body {
+      margin: 0;
+    }
+
+    canvas {
+      display: block;
+    }
+
+    .top {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      /* margin-bottom: 20px; */
+      /* border: 1px solid red; */
+    }
+
+    .top .histroySearch {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      /* border: 1px solid red; */
+      margin: 10px 0;
+    }
+
+    .top .histroySearch span {
+      margin-left: 10px;
+    }
+
+    .top .histroySearch button {
+      width: 80px;
+      height: 30px;
+      border: 0;
+      margin-left: 20px;
+      border-radius: 3px;
+      background: #01664f;
+      color: #fff;
+      font-weight: bold;
+      letter-spacing: 1px;
+      cursor: pointer;
+    }
+
+    #EndShowLine {
+      background: crimson;
+      border: 0;
+      display: none;
+    }
+
+    .top .histroySearch input {
+      height: 10px;
+      padding: 5px;
+    }
+
+    ul,
+    li {
+      list-style: none
+    }
+
+    .left {
+      float: left;
+    }
+
+    .right {
+      float: right;
+    }
+
+    .select_contain {
+      font-size: 14px;
+      color: #333;
+      line-height: 38px;
+      margin: 30px 0;
+    }
+
+    .select_item {
+      margin-right: 50px;
+      position: relative;
+      /* border: 1px solid #e54646; */
+    }
+
+    .select_tit {
+      margin-right: 20px;
+    }
+
+    .select_result {
+      width: 180px;
+      line-height: 38px;
+      border: 1px solid #ccc;
+      text-align: center;
+      border-radius: 4px;
+      text-indent: -8px;
+      cursor: pointer;
+    }
+
+    .select_result .triangle {
+      border: 5px solid transparent;
+      border-top: 5px solid #666;
+      position: absolute;
+      top: 16px;
+      right: 8px;
+    }
+
+    .select_item ul {
+      display: none;
+      position: absolute;
+      width: 180px;
+      background: #fff;
+      border: 1px solid #ccc;
+      border-radius: 0 0 4px 4px;
+      border-top-color: #f3f3f3;
+      margin-top: -4px;
+      padding: 0;
+    }
+
+    .select_item ul li {
+      text-align: center;
+      cursor: pointer;
+      padding: 10px 0;
+      border-bottom: 1px solid #ccc;
+    }
+
+    .select_item ul li:hover {
+      background: #01664f;
+      color: #fff;
+    }
+
+    .top .Select {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 10px 0;
+    }
+
+
+    .top .Select span {
+      margin-left: 10px;
+    }
+
+    .top .Select #upLoad {
+      border-radius: 3px;
+      background: #01664f;
+      color: #fff;
+      font-weight: bold;
+      margin-right: 20px;
+    }
+
+    .top .Select #upLoadFile {
+      display: none;
+    }
+
+    .top .Select #upLoad input__inner {
+      border: 1px solid #e54646;
+      background: #01664f;
+    }
+
+    .top .methods_AreaChoose {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .camera1 {
+      position: absolute;
+      border: 1px solid MidnightBlue;
+      width: 500px;
+      height: 650px;
+      display: none;
+    }
+
+    .top .methods_AreaChoose .openwarning button {
+      display: none;
+    }
+
+
+    .top .methods_AreaChoose .openwarning button {
+      width: 120px;
+      background-color: #01664f;
+      border-radius: 6px;
+      border: 0;
+      color: #fff;
+      padding: 10px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .top .methods_AreaChoose .closewarning button {
+      width: 120px;
+      background-color: crimson;
+      border-radius: 6px;
+      border: 0;
+      color: #fff;
+      padding: 10px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="top">
+    <div class="histroySearch">
+      <span>人员姓名：</span>
       <input type="text" placeholder="请输入人员姓名" id="nameinfo" />
       <span>开始日期：</span>
-      <input type="text" placeholder="请输入起始时间" id="startinfo" />
+      <input type="date" placeholder="请输入起始时间" id="startinfo" />
       <span>结束日期：</span>
-      <input type="text" placeholder="请输入终止时间" id="endinfo" />
-      <button id="btn">查询</button> -->
-      <span>经度: <span id="lng"></span></span>&nbsp;&nbsp;&nbsp;&nbsp;
-      <span>纬度: <span id="lat"></span></span>&nbsp;&nbsp;&nbsp;&nbsp;
-      <span>高度: <span id="height"></span> 米</span>
+      <input type="date" placeholder="请输入终止时间" id="endinfo" />
+      <button id="Searchbtn">查询</button>
+      <button id="AutoFix">自动校准</button>
+      <button id="BeginShowLine">开始画线</button>
+      <button id="EndShowLine">停止画线</button>
     </div>
-    <script type="module">
-      import * as THREE from "./lib/build/three.module.js";
+    <div class="methods_AreaChoose">
+      <div class="methods">
+        <div class="select_item clearfix left">
+          <div class="select_module_con left">
+            <div class="select_result">
+              <span>选择划定区域的方式</span>
+              <div class="triangle"></div>
+            </div>
+            <ul>
+              <li>上传文件</li>
+            </ul>
+          </div>
+        </div>
+        <div class="Select">
+          <div id="upLoad">
+            <input type="file" id="upLoadFile">
+          </div>
+        </div>
+      </div>
+      <div class="AreaChoose">
+        <div class="select_item clearfix left">
+          <div class="select_module_con left">
+            <div class="select_result">
+              <span>选择区域</span>
+              <div class="triangle"></div>
+            </div>
+            <ul>
+              <li>区域一</li>
+              <li>区域二</li>
+              <li>区域三</li>
+              <li>高程上</li>
+              <li>高程下</li>
+              <!-- <li>集中检测</li> -->
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="closewarning">
+        <button id="closebtn">关闭警报</input>
+      </div>
+      <div class="openwarning">
+        <button id="openbtn">打开警报</button>
+      </div>
+    </div>
+  </div>
+  <div class="camera1" id="camera1">
+    <video id="video1" class="h5video" style="width:480px; height:640px; object-fit: fill"></video>
+  </div>
+  <script type="module">
+    import * as THREE from "./lib/build/three.module.js";
 
-      import Stats from "./lib/examples/jsm/libs/stats.module.js";
-      import { GUI } from "./lib/examples/jsm/libs/dat.gui.module.js";
+    import Stats from "./lib/examples/jsm/libs/stats.module.js";
+    import { GUI } from "./lib/examples/jsm/libs/dat.gui.module.js";
 
-      import { OrbitControls } from "./lib/examples/jsm/controls/OrbitControls.js";
-      import { MTLLoader } from "./lib/examples/jsm/loaders/MTLLoader.js";
-      import { OBJLoader } from "./lib/examples/jsm/loaders/OBJLoader.js";
-      import { EffectComposer } from "./lib/examples/jsm/postprocessing/EffectComposer.js";
-      import { RenderPass } from "./lib/examples/jsm/postprocessing/RenderPass.js";
-      import { ShaderPass } from "./lib/examples/jsm/postprocessing/ShaderPass.js";
-      import { OutlinePass } from "./lib/examples/jsm/postprocessing/OutlinePass.js";
-      import { FXAAShader } from "./lib/examples/jsm/shaders/FXAAShader.js";
-      //import Search from "./search.js";
+    import { OrbitControls } from "./lib/examples/jsm/controls/OrbitControls.js";
+    import { MTLLoader } from "./lib/examples/jsm/loaders/MTLLoader.js";
+    import { OBJLoader } from "./lib/examples/jsm/loaders/OBJLoader.js";
+    import { EffectComposer } from "./lib/examples/jsm/postprocessing/EffectComposer.js";
+    import { RenderPass } from "./lib/examples/jsm/postprocessing/RenderPass.js";
+    import { ShaderPass } from "./lib/examples/jsm/postprocessing/ShaderPass.js";
+    import { OutlinePass } from "./lib/examples/jsm/postprocessing/OutlinePass.js";
+    import { FXAAShader } from "./lib/examples/jsm/shaders/FXAAShader.js";
 
-      //Search();
+    var nowarning = false; // 是否报警
+    var ifshowline = false; // 是否画线
+    var audio = new Audio("./sources/warning.mp3"); // 加载音频
 
-      //加入定时器
-      var timer = null;
-      var i = 0;
+    //加入定时器
+    var timer = null;
+    var i = 0;
 
-      //先生成场景
-      var scene = new THREE.Scene();
-      scene.background = new THREE.Color(0x999999);
+    //先生成场景
+    var scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x999999);
 
-      //场景参数变量
-      var renderer, camera, gui, light_1, light_2, light_3;
-      var mtlloader, objloader;
-      var stats, controls;
+    //场景参数变量
+    var renderer, camera, gui, light_1, light_2, light_3;
+    var mtlloader, objloader;
+    var stats, controls;
 
-      var linearea;
-      var mouse = new THREE.Vector2();
-      var selectedObjects = [];
-      var raycaster = new THREE.Raycaster();
+    var linearea;
+    var mouse = new THREE.Vector2();
+    var selectedObjects = [];
+    var raycaster = new THREE.Raycaster();
 
-      //渲染通道变量
-      var composer;
-      var renderPass, outlinePass, effectFXAA;
+    //渲染通道变量
+    var composer;
+    var renderPass, outlinePass, effectFXAA;
 
-      // function X_position(lng) {
-      //   var x = (lng - 118.9245542) / 0.0000212951351;
-      //   return x;
-      // }
+    function init() {
+      //初始化渲染器
+      renderer = new THREE.WebGLRenderer({
+        antialias: true,
+      });
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      //渲染器阴影效果
+      renderer.setClearColor(0xffffff);
+      document.body.appendChild(renderer.domElement);
 
-      // function Y_position(lat) {
-      //   var y = (lat - 32.1167652) / 0.0000212851351;
-      //   return y;
-      // }
+      //初始化相机
+      camera = new THREE.PerspectiveCamera(
+        45,
+        window.innerWidth / window.innerHeight,
+        0.1,
+        1000
+      );
+      camera.up.set(0, 0, 1);
+      camera.position.set(0, 40, 75);
+      camera.lookAt(new THREE.Vector3(0, 0, 0));
 
-      // E=4 高精度
-      function X_position(lng) {
-        var x = (lng - 118.9246212) / 0.0000212951351;
-        return x;
-      }
+      //初始化光源
+      light_1 = new THREE.DirectionalLight(0xffffff);
+      light_2 = new THREE.DirectionalLight(0xffffff);
+      light_3 = new THREE.DirectionalLight(0xffffff);
+      light_1.position.set(0.5, -1.0, 0.5).normalize();
+      light_2.position.set(0.5, 1.0, 0.5).normalize();
+      light_3.position.set(-1.5, 1.0, 0.5).normalize();
+      scene.add(light_1);
+      scene.add(light_2);
+      scene.add(light_3);
 
-      function Y_position(lat) {
-        var y = (lat - 32.1172232) / 0.0000212851351;
-        return y;
-      }
+      //初始化模型
+      //添加辅助坐标
+      // var helper = new THREE.AxesHelper(50);
+      // scene.add(helper);
+      // mtlloader = new MTLLoader();
+      // objloader = new OBJLoader();
+      // mtlloader.load("./4_29/mnbdz.mtl", function (mtl) {
+      //   // mtlloader.load("./models/okk6.mtl", function (mtl) {
+      //   mtl.preload();
+      //   objloader.setMaterials(mtl);
+      //   objloader.load("./4_29/mnbdz.obj", function (obj) {
+      //     // objloader.load("./models/okk6.obj", function (obj) {
+      //     obj.rotateZ(0);
+      //     obj.scale.set(3, 3, 3);
+      //     // obj.position.x = -7.1;
+      //     // obj.position.y = -82;
+      //     // obj.position.z = 56;
+      //     obj.position.x = 0;
+      //     obj.position.y = 0;
+      //     obj.position.z = -100;
+      //     scene.add(obj);
+      //   });
+      // });
 
-      // 显示两点之间连线
-      function ShowLine(log_1, lat_1, log_2, lat_2, high_1, high_2) {
-        var x_1 = X_position(log_1);
-        var y_1 = Y_position(lat_1);
-        var x_2 = X_position(log_2);
-        var y_2 = Y_position(lat_2);
-        var geometry = new THREE.Geometry();
-        var meterial = new THREE.LineBasicMaterial({ color: 0xfc427b });
-        geometry.vertices.push(new THREE.Vector3(x_1, y_1, high_1));
-        geometry.vertices.push(new THREE.Vector3(x_2, y_2, high_2));
-        var line = new THREE.Line(geometry, meterial);
-        scene.add(line);
-      }
+      //初始化性能插件
+      stats = new Stats();
+      document.body.appendChild(stats.dom);
 
-      function init() {
-        //初始化渲染器
-        renderer = new THREE.WebGLRenderer({ antialias: true });
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        //渲染器阴影效果
-        renderer.setClearColor(0xffffff);
-        document.body.appendChild(renderer.domElement);
+      //初始化用户交互插件
+      controls = new OrbitControls(camera, renderer.domElement);
+      // 使动画循环使用时阻尼或自转 意思是否有惯性
+      controls.enableDamping = false;
+      //动态阻尼系数 就是鼠标拖拽旋转灵敏度
+      //controls.dampingFactor = 0.25;
+      // 是否可以按键控制
+      controls.enableKeys = false;
+      //是否可以缩放
+      controls.enableZoom = true;
+      //是否自动旋转
+      controls.autoRotate = false;
+      //设置相机距离原点的最近距离
+      controls.minDistance = 1;
+      //设置相机距离原点的最远距离
+      controls.maxDistance = 1000;
+      //是否开启右键拖拽
+      controls.enablePan = true;
+      window.addEventListener("resize", onWindowResize, false);
 
-        //初始化相机
-        camera = new THREE.PerspectiveCamera(
-          45,
-          window.innerWidth / window.innerHeight,
-          0.1,
-          1000
-        );
-        camera.up.set(0, 0, 1);
-        camera.position.set(0, 40, 75);
-        camera.lookAt(new THREE.Vector3(0, 0, 0));
+    }
 
-        //初始化GUI
-        // // var option = new (function () {
-        // //   this.ID = cube1.name;
-        // //   this.height = cube.position.z;
-        // //   this.position = cube.position.x;
-        // // })();
-        // // gui = new GUI();
-        // //将属性设置到gui当中
-        // gui.domElement.style =
-        //   "position:absolute;top:50px;left:0px;height:600px";
-        // gui.add(option, "ID").name("人员ID: ").listen();
-        // gui.add(option, "height").name("高度: ").listen();
-        // gui.add(option, "position").name("位置: ").listen();
+    // var btn = document.getElementById("Searchbtn");
+    // btn.onclick = function () {
+    //   var nameinfo = document.getElementById("nameinfo").value;
+    //   var startinfo = document.getElementById("startinfo").value;
+    //   var endinfo = document.getElementById("endinfo").value;
+    //   var URL =
+    //     "http://120.26.234.200:8080/location/history/?name=" +
+    //     nameinfo +
+    //     "&time1=" +
+    //     startinfo +
+    //     "&time2=" +
+    //     endinfo;
+    // };
 
-        //初始化光源
-        light_1 = new THREE.DirectionalLight(0xffffff);
-        light_2 = new THREE.DirectionalLight(0xffffff);
-        light_3 = new THREE.DirectionalLight(0xffffff);
-        light_1.position.set(0.5, -1.0, 0.5).normalize();
-        light_2.position.set(0.5, 1.0, 0.5).normalize();
-        light_3.position.set(-1.5, 1.0, 0.5).normalize();
-        scene.add(light_1);
-        scene.add(light_2);
-        scene.add(light_3);
+    var latestlat, latestlng, latesthigh;// 原点经纬度
 
-        //初始化模型
-        //添加辅助坐标
-        var helper = new THREE.AxesHelper(50);
-        scene.add(helper);
-        mtlloader = new MTLLoader();
-        objloader = new OBJLoader();
-        mtlloader.load("./models/okk6.mtl", function (mtl) {
-          mtl.preload();
-          objloader.setMaterials(mtl);
-          objloader.load("./models/okk6.obj", function (obj) {
-            // console.log("x:" + obj.position.x);
-            // console.log("y:" + obj.position.y);
-            // console.log("z:" + obj.position.z);
-            //obj.rotateZ(0.173); // 原来的值
-            obj.rotateZ(0.183);
-            obj.scale.set(3, 3, 3);
-            obj.position.x = -7.1;
-            obj.position.y = -82;
-            obj.position.z = 56;
-            scene.add(obj);
-          });
-        });
+    var AutoFixbtn = document.getElementById("AutoFix");
+    AutoFixbtn.onclick = function () {
+      $.ajax({
+        type: "GET",
+        url: "http://124.70.106.8:8080/location/latest/",
+        success: function (res) {
+          console.log(res.data[res.data.length - 1].fields.lat);
+          console.log(res.data[res.data.length - 1].fields.lng);
+          console.log(res.data[res.data.length - 1].fields.high);
+          latestlat = res.data[res.data.length - 1].fields.lat;
+          latestlng = res.data[res.data.length - 1].fields.lng;
+          latesthigh = res.data[res.data.length - 1].fields.high;
+        },
+        error: function (res) {
+          console.log(res);
+        },
+      });
+    };
 
-        //初始化性能插件
-        stats = new Stats();
-        document.body.appendChild(stats.dom);
+    // 初始化模型
+    var cube, cube1, cube2, testcube, worker_part1, worker_part2, camera_module1, camera_module2, camera_module3, camera_stick1, camera_stick2, camera_stick3, posttime, mindistance;
+    mindistance = 3;// 距离围栏最小报警距离
 
-        //初始化用户交互插件
-        controls = new OrbitControls(camera, renderer.domElement);
-        // 使动画循环使用时阻尼或自转 意思是否有惯性
-        controls.enableDamping = false;
-        //动态阻尼系数 就是鼠标拖拽旋转灵敏度
-        //controls.dampingFactor = 0.25;
-        // 是否可以按键控制
-        controls.enableKeys = false;
-        //是否可以缩放
-        controls.enableZoom = true;
-        //是否自动旋转
-        controls.autoRotate = false;
-        //设置相机距离原点的最近距离
-        controls.minDistance = 1;
-        //设置相机距离原点的最远距离
-        controls.maxDistance = 1000;
-        //是否开启右键拖拽
-        controls.enablePan = true;
-        window.addEventListener("resize", onWindowResize, false);
-        document.addEventListener("keydown", onKeyDown, false);
+    function initCube() {
+      var geometryOrign = new THREE.BoxGeometry(1, 1, 1);
+      var materialOrign = new THREE.MeshBasicMaterial({
+        color: "white",
+      });
+      var geometrytest = new THREE.BoxGeometry(0.5, 0.5, 0.5);
+      var materialtest = new THREE.MeshBasicMaterial({
+        color: "white",
+      });
 
-        /*
-        //初始化轮廓渲染通道
-        composer = new EffectComposer(renderer);
-        renderPass = new RenderPass(scene, camera);
-        composer.addPass(renderPass);
-        outlinePass = new OutlinePass(new THREE.Vector2(window.innerWidth, window.innerHeight), scene, camera);
-        composer.addPass(outlinePass);
-        effectFXAA = new ShaderPass(FXAAShader);
-        effectFXAA.uniforms['resolution'].value.set(1 / window.innerWidth, 1 / window.innerHeight);
-        composer.addPass(effectFXAA);
+      cube = new THREE.Mesh(geometrytest, materialtest);// 原点
+      testcube = new THREE.Mesh(geometrytest, materialtest);// 原点
+      // scene.add(cube);
+      // cube.position.x = 0;
+      // cube.position.y = 8;
+      // cube.position.z = 4;
+      scene.add(testcube);
 
-        renderer.domElement.style.touchAction = 'none';
-        renderer.domElement.addEventListener('pointermove', onPointerMove, false);
+      /* 模拟人物(球+圆锥) */
+      // 球
+      let worker_part1_ball = new THREE.SphereGeometry(0.3, 100, 100);
+      worker_part1 = new THREE.Mesh(
+        worker_part1_ball,
+        new THREE.MeshBasicMaterial({
+          color: 0x00FF00,
+          side: THREE.DoubleSide,
+        })
+      );
+      // 圆锥
+      let worker_part2_zhui = new THREE.CylinderGeometry(0, 0.3, 0.5, 100, 100);
+      worker_part2 = new THREE.Mesh(
+        worker_part2_zhui,
+        new THREE.MeshBasicMaterial({
+          color: 0x00FF00,
+          side: THREE.DoubleSide,
+        })
+      );
+      worker_part2.position.z -= 0.3;
+      worker_part2.rotation.x = -Math.PI / 2;
+      scene.add(worker_part1);
+      scene.add(worker_part2);
 
-
-        function onPointerMove(event) {
-            if (event.isPrimary === false) return;
-
-            mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-            mouse.y = - (event.clientY / window.innerHeight) * 2 + 1;
-
-            checkIntersection();
+      /* 创建摄像头模型 */
+      var shape1 = new THREE.Shape();
+      /**四条直线绘制一个矩形轮廓*/
+      shape1.moveTo(0, 0);//起点
+      shape1.lineTo(0, 0.5);//第2点
+      shape1.lineTo(0.5, 0.5);//第3点
+      shape1.lineTo(0.5, 0);//第4点
+      shape1.lineTo(0, 0);//第5点
+      var shape2 = new THREE.Shape();
+      /**四条直线绘制一个矩形轮廓*/
+      shape2.moveTo(0, 0);//起点
+      shape2.lineTo(0, 0.1);//第2点
+      shape2.lineTo(0.1, 0.1);//第3点
+      shape2.lineTo(0.1, 0);//第4点
+      shape2.lineTo(0, 0);//第5点
+      /**创建轮廓的扫描轨迹(3D样条曲线)*/
+      var curve1_1 = new THREE.CatmullRomCurve3([
+        new THREE.Vector3(6, -34, 11),
+        new THREE.Vector3(6, -32, 10)
+      ]);
+      var curve1_2 = new THREE.CatmullRomCurve3([
+        new THREE.Vector3(-74, -54, 11),
+        new THREE.Vector3(-74, -52, 10),
+      ]);
+      var curve1_3 = new THREE.CatmullRomCurve3([
+        new THREE.Vector3(-44.5, 32, 9),
+        new THREE.Vector3(-44.5, 30, 8)
+      ]);
+      var curve2_1 = new THREE.CatmullRomCurve3([
+        new THREE.Vector3(6, -34.4, 9),
+        new THREE.Vector3(6, -33, 10.5)
+      ]);
+      var curve2_2 = new THREE.CatmullRomCurve3([
+        new THREE.Vector3(-74, -54.4, 9),
+        new THREE.Vector3(-74, -53, 10.5)
+      ]);
+      var curve2_3 = new THREE.CatmullRomCurve3([
+        new THREE.Vector3(-44.5, 32.4, 7),
+        new THREE.Vector3(-44.5, 31, 8.5)
+      ]);
+      // 摄像头
+      var geometry1_1 = new THREE.ExtrudeGeometry(//拉伸造型
+        shape1,//二维轮廓
+        //拉伸参数
+        {
+          bevelEnabled: false,//无倒角
+          extrudePath: curve1_1,//选择扫描轨迹
+          steps: 50//扫描方向细分数
         }
-
-
-        function addSelectedObject(object) {
-            selectedObjects = [];
-            selectedObjects.push(object);
+      );
+      var geometry1_2 = new THREE.ExtrudeGeometry(//拉伸造型
+        shape1,//二维轮廓
+        //拉伸参数
+        {
+          bevelEnabled: false,//无倒角
+          extrudePath: curve1_2,//选择扫描轨迹
+          steps: 50//扫描方向细分数
         }
+      );
+      var geometry1_3 = new THREE.ExtrudeGeometry(//拉伸造型
+        shape1,//二维轮廓
+        //拉伸参数
+        {
+          bevelEnabled: false,//无倒角
+          extrudePath: curve1_3,//选择扫描轨迹
+          steps: 50//扫描方向细分数
+        }
+      );
+      // 支架
+      var geometry2_1 = new THREE.ExtrudeGeometry(//拉伸造型
+        shape2,//二维轮廓
+        //拉伸参数
+        {
+          bevelEnabled: false,//无倒角
+          extrudePath: curve2_1,//选择扫描轨迹
+          steps: 50//扫描方向细分数
+        }
+      );
+      var geometry2_2 = new THREE.ExtrudeGeometry(//拉伸造型
+        shape2,//二维轮廓
+        //拉伸参数
+        {
+          bevelEnabled: false,//无倒角
+          extrudePath: curve2_2,//选择扫描轨迹
+          steps: 50//扫描方向细分数
+        }
+      );
+      var geometry2_3 = new THREE.ExtrudeGeometry(//拉伸造型
+        shape2,//二维轮廓
+        //拉伸参数
+        {
+          bevelEnabled: false,//无倒角
+          extrudePath: curve2_3,//选择扫描轨迹
+          steps: 50//扫描方向细分数
+        }
+      );
+      var material1_1 = new THREE.MeshBasicMaterial({ color: 0xffffff });
+      var material2_1 = new THREE.MeshBasicMaterial({ color: 0xffffff });
+      var material1_2 = new THREE.MeshBasicMaterial({ color: 0xffffff });
+      var material2_2 = new THREE.MeshBasicMaterial({ color: 0xffffff });
+      var material1_3 = new THREE.MeshBasicMaterial({ color: 0xffffff });
+      var material2_3 = new THREE.MeshBasicMaterial({ color: 0xffffff });
+      camera_module1 = new THREE.Mesh(geometry1_1, material1_1);
+      camera_module2 = new THREE.Mesh(geometry1_2, material1_2);
+      camera_module3 = new THREE.Mesh(geometry1_3, material1_3);
+      camera_stick1 = new THREE.Mesh(geometry2_1, material2_1);
+      camera_stick2 = new THREE.Mesh(geometry2_2, material2_2);
+      camera_stick3 = new THREE.Mesh(geometry2_3, material2_3);
+      scene.add(camera_module1);
+      scene.add(camera_module2);
+      scene.add(camera_module3);
+      scene.add(camera_stick1);
+      scene.add(camera_stick2);
+      scene.add(camera_stick3);
+    }
 
-        function checkIntersection() {
-            raycaster.setFromCamera(mouse. camera);
-            var intersects = raycaster.intersectObject(scene, true);
-
-            if (intersects.length > 0) {
-                var selectedObject = intersects[0].object;
-                addSelectedObject(selectedObject);
-                outlinePass.selectedObjects = selectedObjects;
+    initCube();// 初始化模型函数
+    function SafeHat() {
+      // 如果有人员未带安全帽，将该区域的摄像头变红
+      console.log(camera_module1.material.color);
+      // 摄像头默认是白色
+      camera_module1.material.color.setHex(0xffffff);
+      camera_stick1.material.color.setHex(0xffffff);
+      camera_module2.material.color.setHex(0xffffff);
+      camera_stick2.material.color.setHex(0xffffff);
+      camera_module3.material.color.setHex(0xffffff);
+      camera_stick3.material.color.setHex(0xffffff);
+      $.ajax({
+        type: "GET",
+        url: "http://124.70.106.8:8080/device/check/",
+        success: function (res) {
+          console.log(res.data);
+          for (let i = 0; i < res.data.length; i++) {
+            if (res.data[i].fields.rtmpname == "live1") {
+              camera_module1.material.color.setHex(0xff0000);
+              camera_stick1.material.color.setHex(0xff0000);
             }
+            if (res.data[i].fields.rtmpname == "live2") {
+              camera_module2.material.color.setHex(0xff0000);
+              camera_stick2.material.color.setHex(0xff0000);
+            }
+            if (res.data[i].fields.rtmpname == "live3") {
+              camera_module3.material.color.setHex(0xff0000);
+              camera_stick3.material.color.setHex(0xff0000);
+            }
+          }
+        },
+        error: function (res) {
+          console.log(res);
+        },
+      });
+    }
+
+    setInterval(() => {
+      // SafeHat();
+    }, 1000);
+
+    // 经纬度同坐标转换
+    function X_position(lng) {
+      var x = (lng - latestlng) * (294117.647);
+      return x;
+    }
+    function Y_position(lat) {
+      var y = (lat - latestlat) * (327272.727);
+      return y;
+    }
+    function Z_position(high) {
+      var z = (high - latesthigh) * 2.2;
+      return z;
+    }
+
+    // 显示两点之间连线
+    function ShowLine(x_1, x_2, y_1, y_2, high_1, high_2) {
+      console.log(x_1, x_2, y_1, y_2, high_1, high_2);
+      var geometry = new THREE.Geometry();
+      var meterial = new THREE.LineBasicMaterial({
+        color: 0xff0000,
+      });
+      geometry.vertices.push(new THREE.Vector3(x_1, y_1, high_1));
+      geometry.vertices.push(new THREE.Vector3(x_2, y_2, high_2));
+      var line = new THREE.Line(geometry, meterial);
+      scene.add(line);
+    }
+
+    // 人员位置
+    function worker_position(lng, lat, high) {
+      worker_part1.position.x =
+        X_position(lng);
+      worker_part1.position.y =
+        Y_position(lat);
+      worker_part1.position.z =
+        Z_position(high);
+      worker_part2.position.x =
+        X_position(lng);
+      worker_part2.position.y =
+        Y_position(lat);
+      worker_part2.position.z =
+        Z_position(high) - 0.3;
+      console.log(worker_part1.position.x);
+      console.log(worker_part1.position.y);
+      console.log(worker_part1.position.z);
+    }
+
+    /* 实时路径 */
+    var aaa = "1";
+
+    // 越界检测
+    var timer = null;
+    function check_dangerous(test, area2, area3, area4, area5, mode) {
+      var shishipath = [];
+      posttime = 6;
+      console.log(area3);
+      timer = setInterval(function () {
+        $.ajax({
+          type: "GET",
+          url: "http://124.70.106.8:8080/location/latest/",
+          success: function (res) {
+            console.log(res.data[res.data.length - 1].fields.lat, latestlat);
+            console.log(res.data[res.data.length - 1].fields.lng, latestlng);
+            console.log(res.data[res.data.length - 1].fields.high, latesthigh);
+            worker_position(res.data[res.data.length - 1].fields.lng, res.data[res.data.length - 1].fields.lat, res.data[res.data.length - 1].fields.high);
+            console.log(mode == "ground");
+            switch (mode) {
+              case "ground":
+                /* 路径绘制 */
+                if (ifshowline) {
+                  let newpath = {
+                    x: X_position(res.data[res.data.length - 1].fields.lng),
+                    y: Y_position(res.data[res.data.length - 1].fields.lat),
+                    z: Z_position(res.data[res.data.length - 1].fields.high),
+                  };
+                  shishipath.push(newpath);
+                  if (shishipath.length == 2) {
+                    ShowLine(
+                      shishipath[0].x,
+                      shishipath[1].x,
+                      shishipath[0].y,
+                      shishipath[1].y,
+                      shishipath[0].z,
+                      shishipath[1].z
+                    );
+                    shishipath.shift();
+                  }
+                }
+                // 平面越界警报
+                if (!PlaneCheck(test, [X_position(res.data[res.data.length - 1].fields.lng), Y_position(res.data[res.data.length - 1].fields.lat), Z_position(res.data[res.data.length - 1].fields.high)])) {
+                  // console.log("超出安全区域了！");
+                  worker_part1.material.color.setHex(0xff0000);
+                  worker_part2.material.color.setHex(0xff0000);
+                  if (posttime == 6) {
+                    posttime = 1;
+                    if (!nowarning) {
+                      audio.pause();
+                      audio.load();
+                      audio.play();
+                    }
+                    $.ajax({
+                      type: "POST",
+                      url: "http://124.70.106.8:8080/device/alarm/",
+                      data: {
+                        workername: "name",
+                        lng: res.data[res.data.length - 1].fields.lng,
+                        lat: res.data[res.data.length - 1].fields.lat,
+                        high: res.data[res.data.length - 1].fields.high
+                      },
+                      success: function (res) {
+                        console.log(res)
+                      }
+                    })
+                  } else {
+                    audio.pause();
+                    audio.load();
+                    posttime++;
+                  }
+                } else {
+                  // console.log("未超出安全区域");
+                  worker_part1.material.color.setHex(0x00FF00);
+                  worker_part2.material.color.setHex(0x00FF00);
+                  audio.pause();
+                  audio.load();
+                }
+                break;
+              case "sky":
+                // 高程越界警报
+                if (SkyCheck(area2, [X_position(res.data[res.data.length - 1].fields.lng), Y_position(res.data[res.data.length - 1].fields.lat), Z_position(res.data[res.data.length - 1].fields.high)])) {
+                  // console.log("进入危险区域了！！");
+                  worker_part1.material.color.setHex(0xff0000);
+                  worker_part2.material.color.setHex(0xff0000);
+                  if (posttime == 6) {
+                    posttime = 1;
+                    if (!nowarning) {
+                      audio.pause();
+                      audio.load();
+                      audio.play();
+                    }
+                    $.ajax({
+                      type: "POST",
+                      url: "http://124.70.106.8:8080/device/alarm/",
+                      data: {
+                        workername: "name",
+                        lng: res.data[res.data.length - 1].fields.lng,
+                        lat: res.data[res.data.length - 1].fields.lat,
+                        high: res.data[res.data.length - 1].fields.high
+                      },
+                      success: function (res) {
+                        console.log(res)
+                      }
+                    })
+                  } else {
+                    audio.pause();
+                    audio.load();
+                    posttime++;
+                  }
+                } else {
+                  // console.log("未进入危险区域");
+                  audio.pause();
+                  audio.load();
+                  worker_part1.material.color.setHex(0x00FF00);
+                  worker_part2.material.color.setHex(0x00FF00);
+                }
+                break;
+              case "pole":
+                // 电线杆靠近检测
+                let x1 = X_position(res.data[res.data.length - 1].fields.lng);
+                let y1 = Y_position(res.data[res.data.length - 1].fields.lat);
+                let x2 = area3[0][0];
+                let y2 = area3[0][1];
+                let dx = x1 - x2;
+                let dy = y1 - y2;
+                if (Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2)) < 1.5) {
+                  // console.log("进入危险区域了！！");
+                  worker_part1.material.color.setHex(0xff0000);
+                  worker_part2.material.color.setHex(0xff0000);
+                  if (posttime == 6) {
+                    posttime = 1;
+                    if (!nowarning) {
+                      audio.pause();
+                      audio.load();
+                      audio.play();
+                    }
+                    $.ajax({
+                      type: "POST",
+                      url: "http://124.70.106.8:8080/device/alarm/",
+                      data: {
+                        workername: "name",
+                        lng: res.data[res.data.length - 1].fields.lng,
+                        lat: res.data[res.data.length - 1].fields.lat,
+                        high: res.data[res.data.length - 1].fields.high
+                      },
+                      success: function (res) {
+                        console.log(res)
+                      }
+                    })
+                  } else {
+                    audio.pause();
+                    audio.load();
+                    posttime++;
+                  }
+                } else {
+                  // console.log("未进入危险区域");
+                  audio.pause();
+                  audio.load();
+                  worker_part1.material.color.setHex(0x00FF00);
+                  worker_part2.material.color.setHex(0x00FF00);
+                }
+                break;
+              case "all":
+                switch (true) {
+                  case Z_position(res.data[res.data.length - 1].fields.high, latesthigh) < 4:
+                    // 平面越界警报
+                    if (!PlaneCheck(test, [X_position(res.data[res.data.length - 1].fields.lng), Y_position(res.data[res.data.length - 1].fields.lat), Z_position(res.data[res.data.length - 1].fields.high)])) {
+                      console.log("超出安全区域了！");
+                      worker_part1.material.color.setHex(0xff0000);
+                      worker_part2.material.color.setHex(0xff0000);
+                      if (posttime == 6) {
+                        posttime = 1;
+                        if (!nowarning) {
+                          audio.pause();
+                          audio.load();
+                          audio.play();
+                        }
+                        $.ajax({
+                          type: "POST",
+                          url: "http://124.70.106.8:8080/device/alarm/",
+                          data: {
+                            workername: "name",
+                            lng: res.data[res.data.length - 1].fields.lng,
+                            lat: res.data[res.data.length - 1].fields.lat,
+                            high: res.data[res.data.length - 1].fields.high
+                          },
+                          success: function (res) {
+                            console.log(res)
+                          }
+                        })
+                      } else {
+                        audio.pause();
+                        audio.load();
+                        posttime++;
+                      }
+                    } else {
+                      // console.log("未超出安全区域");
+                      worker_part1.material.color.setHex(0x00FF00);
+                      worker_part2.material.color.setHex(0x00FF00);
+                      audio.pause();
+                      audio.load();
+                    }
+                    break;
+                  case Z_position(res.data[res.data.length - 1].fields.high, latesthigh) >= 4:
+                    // 高程越界警报
+                    if (SkyCheck(area2, [X_position(res.data[res.data.length - 1].fields.lng), Y_position(res.data[res.data.length - 1].fields.lat), Z_position(res.data[res.data.length - 1].fields.high)])) {
+                      // console.log("进入危险区域了！！");
+                      worker_part1.material.color.setHex(0xff0000);
+                      worker_part2.material.color.setHex(0xff0000);
+                      if (posttime == 6) {
+                        posttime = 1;
+                        if (!nowarning) {
+                          audio.pause();
+                          audio.load();
+                          audio.play();
+                        }
+                        $.ajax({
+                          type: "POST",
+                          url: "http://124.70.106.8:8080/device/alarm/",
+                          data: {
+                            workername: "name",
+                            lng: res.data[res.data.length - 1].fields.lng,
+                            lat: res.data[res.data.length - 1].fields.lat,
+                            high: res.data[res.data.length - 1].fields.high
+                          },
+                          success: function (res) {
+                            console.log(res)
+                          }
+                        })
+                      } else {
+                        audio.pause();
+                        audio.load();
+                        posttime++;
+                      }
+                    } else {
+                      // console.log("未进入危险区域");
+                      audio.pause();
+                      audio.load();
+                      worker_part1.material.color.setHex(0x00FF00);
+                      worker_part2.material.color.setHex(0x00FF00);
+                    }
+                    break;
+                  case Math.abs(X_position(res.data[res.data.length - 1].fields.lng) - 11.8) <= 3 && Math.abs(Y_position(res.data[res.data.length - 1].fields.lat) - 0.5) <= 3:
+                    // 电线杆靠近检测
+                    let x1 = X_position(res.data[res.data.length - 1].fields.lng);
+                    let y1 = Y_position(res.data[res.data.length - 1].fields.lat);
+                    let x2 = area3[0][0];
+                    let y2 = area3[0][1];
+                    let dx = x1 - x2;
+                    let dy = y1 - y2;
+                    if (Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2)) < 1.5) {
+                      // console.log("进入危险区域了！！");
+                      worker_part1.material.color.setHex(0xff0000);
+                      worker_part2.material.color.setHex(0xff0000);
+                      if (posttime == 6) {
+                        posttime = 1;
+                        if (!nowarning) {
+                          audio.pause();
+                          audio.load();
+                          audio.play();
+                        }
+                        $.ajax({
+                          type: "POST",
+                          url: "http://124.70.106.8:8080/device/alarm/",
+                          data: {
+                            workername: "name",
+                            lng: res.data[res.data.length - 1].fields.lng,
+                            lat: res.data[res.data.length - 1].fields.lat,
+                            high: res.data[res.data.length - 1].fields.high
+                          },
+                          success: function (res) {
+                            console.log(res)
+                          }
+                        })
+                      } else {
+                        audio.pause();
+                        audio.load();
+                        posttime++;
+                      }
+                    } else {
+                      // console.log("未进入危险区域");
+                      audio.pause();
+                      audio.load();
+                      worker_part1.material.color.setHex(0x00FF00);
+                      worker_part2.material.color.setHex(0x00FF00);
+                    }
+                    break;
+                  default:
+                    break;
+                }
+                break;
+              case "skylow":
+                // 高程越界警报
+                if (SkyCheck(area5, [X_position(res.data[res.data.length - 1].fields.lng), Y_position(res.data[res.data.length - 1].fields.lat), Z_position(res.data[res.data.length - 1].fields.high)])) {
+                  // console.log("进入危险区域了！！");
+                  worker_part1.material.color.setHex(0xff0000);
+                  worker_part2.material.color.setHex(0xff0000);
+                  if (posttime == 6) {
+                    posttime = 1;
+                    if (!nowarning) {
+                      audio.pause();
+                      audio.load();
+                      audio.play();
+                    }
+                    $.ajax({
+                      type: "POST",
+                      url: "http://124.70.106.8:8080/device/alarm/",
+                      data: {
+                        workername: "name",
+                        lng: res.data[res.data.length - 1].fields.lng,
+                        lat: res.data[res.data.length - 1].fields.lat,
+                        high: res.data[res.data.length - 1].fields.high
+                      },
+                      success: function (res) {
+                        console.log(res)
+                      }
+                    })
+                  } else {
+                    audio.pause();
+                    audio.load();
+                    posttime++;
+                  }
+                } else {
+                  // console.log("未进入危险区域");
+                  audio.pause();
+                  audio.load();
+                  worker_part1.material.color.setHex(0x00FF00);
+                  worker_part2.material.color.setHex(0x00FF00);
+                }
+                break;
+              default:
+                break;
+            }
+          },
+          error: function (res) {
+            console.log(res);
+          },
+        });
+      }, 500);
+    }
+
+
+    //声明一个时钟对象
+    // var clock = new THREE.Clock();
+    document.addEventListener('mouseup', onMouseUp);
+
+    function render() {
+      renderer.render(scene, camera);
+    }
+
+    var objects = [];
+
+    /* 查看视频流 */
+    function onMouseUp(event) {
+      var rayCaster = getRay(event);
+      var intersects1 = rayCaster.intersectObjects([camera_module1]);//参数需为数组
+      var intersects2 = rayCaster.intersectObjects([camera_module2]);//参数需为数组
+      var intersects3 = rayCaster.intersectObjects([camera_module3]);//参数需为数组
+      //左键点击并且点击的是物体时
+      if (event.button === 0 && intersects1[0]) {
+        let selectObj = intersects1[0].object;//储存当前点击的对象
+        console.log(selectObj);
+        divRender1();
+      } else if (event.button === 0 && intersects2[0]) {
+        let selectObj = intersects2[0].object;//储存当前点击的对象
+        console.log(selectObj);
+        divRender2();
+      } else if (event.button === 0 && intersects3[0]) {
+        let selectObj = intersects3[0].object;//储存当前点击的对象
+        console.log(selectObj);
+        divRender3();
+      } else if (event.button === 2 || event.button === 1) {
+        return;
+      } else {
+        let div = document.getElementById('camera1');
+        div.style.display = "none";
+      }
+    }
+    //根据鼠标点击的点和相机建立一条射线
+    function getRay(event) {
+      event.preventDefault();
+      var mouse = new THREE.Vector2();
+      var rayCaster = new THREE.Raycaster();
+      var rect = renderer.domElement.getBoundingClientRect();
+      mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+      mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+      rayCaster.setFromCamera(mouse, camera);
+      return rayCaster;
+    }
+    // div位置变换和赋值
+    function divRender1() {
+      console.log(v1);
+      console.log("1");
+      //计算三维坐标对应的屏幕坐标
+      var right = 0;
+      var bottom = 0;
+      //设置div屏幕位置
+      let div = document.getElementById('camera1');
+      div.style.display = "inline";
+      div.style.right = right + 'px';
+      div.style.bottom = bottom + 'px';
+      if (v1 != undefined) {
+        v1.disconnect();
+      }
+      $(function () {
+        var conf1 = {
+          videoid: 'video1',
+          protocol: 'http:', //'http:' or 'https:'
+          host: 'localhost:8082', //'localhost:8080'
+          rootpath: '/', // '/' or window.location.pathname
+          token: 'token1',
+          hlsver: 'v1', //v1 is for ts, v2 is for fmp4
+          session: 'c1782caf-b670-42d8-ba90-2244d0b0ee83' //session got from login
+        };
+        v1 = H5sPlayerCreate(conf1);
+        v1.connect();
+      });
+    }
+    var v1;
+    function divRender2() {
+      //计算三维坐标对应的屏幕坐标
+      var right = 0;
+      var bottom = 0;
+      //设置div屏幕位置
+      let div = document.getElementById('camera1');
+      div.style.display = "inline";
+      div.style.right = right + 'px';
+      div.style.bottom = bottom + 'px';
+      if (v1 != undefined) {
+        v1.disconnect();
+      }
+      $(function () {
+        var conf2 = {
+          videoid: 'video1',
+          protocol: 'http:', //'http:' or 'https:'
+          host: 'localhost:8082', //'localhost:8080'
+          rootpath: '/', // '/' or window.location.pathname
+          token: 'token2',
+          hlsver: 'v1', //v1 is for ts, v2 is for fmp4
+          session: 'c1782caf-b670-42d8-ba90-2244d0b0ee83' //session got from login
+        };
+        v1 = H5sPlayerCreate(conf2);
+        v1.connect();
+      });
+    }
+    function divRender3() {
+      console.log("3");
+      //计算三维坐标对应的屏幕坐标
+      var right = 0;
+      var bottom = 0;
+      //设置div屏幕位置
+      let div = document.getElementById('camera1');
+      div.style.display = "inline";
+      div.style.right = right + 'px';
+      div.style.bottom = bottom + 'px';
+      if (v1 != undefined) {
+        v1.disconnect();
+      }
+      $(function () {
+        var conf3 = {
+          videoid: 'video1',
+          protocol: 'http:', //'http:' or 'https:'
+          host: 'localhost:8082', //'localhost:8080'
+          rootpath: '/', // '/' or window.location.pathname
+          token: 'token3',
+          hlsver: 'v1', //v1 is for ts, v2 is for fmp4
+          session: 'c1782caf-b670-42d8-ba90-2244d0b0ee83' //session got from login
+        };
+        v1 = H5sPlayerCreate(conf3);
+        v1.connect();
+      });
+    }
+
+    // 增加墙体
+    function addWall(position) {
+      // 三维围栏（BYH）
+      for (let i = 0; i < position.length - 1; i++) {
+        // 计算长度
+        let dx = Math.abs(position[i][0] - position[i + 1][0]);
+        let dy = Math.abs(position[i][1] - position[i + 1][1]);
+        let width = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
+        let geometryBox = new THREE.BoxGeometry(width, 0.5, 14);
+        let lineSegments = new THREE.Mesh(
+          geometryBox,
+          new THREE.MeshBasicMaterial({
+            color: "yellow",
+            side: THREE.DoubleSide,
+            transparent: true,
+            opacity: 0.2,
+          })
+        );
+        // lineSegments.computeLineDistances();
+        // 增加一个旋转角度
+        // 求角度
+        let deg = Math.atan(
+          (position[i][1] - position[i + 1][1]) /
+          (position[i][0] - position[i + 1][0])
+        );
+        lineSegments.rotation.z = deg;
+
+        objects.push(lineSegments);
+        lineSegments.position.x = (position[i][0] + position[i + 1][0]) / 2;
+        lineSegments.position.y = (position[i][1] + position[i + 1][1]) / 2;
+        lineSegments.position.z = 0;
+        scene.add(lineSegments);
+      }
+    }
+
+    //添加圆柱体
+    function addSkycheck(start, end, radius) {
+      // 计算长度
+      let dx = Math.abs(start - end.x);
+      let dy = Math.abs(start.y - end.y);
+      let dz = Math.abs(start.z - end.z);
+      let width = Math.sqrt(
+        Math.pow(dx, 2) + Math.pow(dy, 2) + Math.pow(dz, 2)
+      );
+      var cylinder = createCylinderByTwoPoints(start, end, radius);
+      scene.add(cylinder);
+
+      //画一条直线方便观察
+      var geometry3 = new THREE.Geometry();
+      geometry3.vertices.push(start);
+      geometry3.vertices.push(end);
+      var line = new THREE.Line(
+        geometry3,
+        new THREE.LineBasicMaterial({
+          color: "black",
+        }),
+        THREE.LineSegments
+      );
+      scene.add(line);
+
+      // 球体
+      let sphereGeometry_2_1 = new THREE.SphereGeometry(radius, 100, 100);
+      let sphereGeometry_2_2 = new THREE.SphereGeometry(radius, 100, 100);
+      let lineSegments_2_1 = new THREE.Mesh(
+        sphereGeometry_2_1,
+        new THREE.MeshBasicMaterial({
+          color: "red",
+          side: THREE.DoubleSide,
+          transparent: true,
+          opacity: 0.2,
+        })
+      );
+      let lineSegments_2_2 = new THREE.Mesh(
+        sphereGeometry_2_2,
+        new THREE.MeshBasicMaterial({
+          color: "red",
+          side: THREE.DoubleSide,
+          transparent: true,
+          opacity: 0.2,
+        })
+      );
+
+      objects.push(lineSegments_2_1);
+      lineSegments_2_1.position.x = start.x;
+      lineSegments_2_1.position.y = start.y;
+      lineSegments_2_1.position.z = start.z;
+      scene.add(lineSegments_2_1);
+      objects.push(lineSegments_2_2);
+      lineSegments_2_2.position.x = end.x;
+      lineSegments_2_2.position.y = end.y;
+      lineSegments_2_2.position.z = end.z;
+      scene.add(lineSegments_2_2);
+    }
+
+    // 根据两点画圆柱
+    function createCylinderByTwoPoints(pointX, pointY, radius) {
+      var direction = new THREE.Vector3().subVectors(pointY, pointX);
+      var orientation = new THREE.Matrix4();
+      orientation.lookAt(pointX, pointY, new THREE.Object3D().up);
+      orientation.multiply(
+        new THREE.Matrix4().set(
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          -1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1
+        )
+      );
+      var edgeGeometry = new THREE.CylinderGeometry(
+        radius,
+        radius,
+        direction.length(),
+        100,
+        100
+      );
+      var material = new THREE.MeshLambertMaterial({
+        color: "red",
+        side: THREE.DoubleSide,
+        transparent: true,
+        opacity: 0.2,
+      });
+      var edge = new THREE.Mesh(edgeGeometry, material);
+      edge.applyMatrix4(orientation);
+      //两个点的中心点 position based on midpoints - there may be a better solution than this
+      edge.position.x = (pointY.x + pointX.x) / 2;
+      edge.position.y = (pointY.y + pointX.y) / 2;
+      edge.position.z = (pointY.z + pointX.z) / 2;
+      return edge;
+    }
+
+    // 判断平面区域越界
+    function PlaneCheck(safearea, workerlocation) {
+      let minx = safearea[0][0];
+      let maxx = safearea[0][0];
+      let miny = safearea[0][1];
+      let maxy = safearea[0][1];
+      for (let i = 1; i < safearea.length; i++) {
+        if (safearea[i][0] < minx) {
+          minx = safearea[i][0];
         }
-        */
+        if (safearea[i][0] > maxx) {
+          maxx = safearea[i][0];
+        }
+        if (safearea[i][1] < miny) {
+          miny = safearea[i][1];
+        }
+        if (safearea[i][1] > maxy) {
+          maxy = safearea[i][1];
+        }
       }
-
-      //本地经纬度数组（测试）118.935406,32.121031
-      // var data = [
-      //   {
-      //     lng: 118.9238342,
-      //     lat: 32.1170452,
-      //     height: 3,
-      //   },
-      //   {
-      //     lng: 118.9237342,
-      //     lat: 32.1168452,
-      //     height: 1,
-      //   },
-      //   {
-      //     lng: 118.9239342,
-      //     lat: 32.1169452,
-      //     height: 5,
-      //   },
-      //   {
-      //     lng: 118.9237342,
-      //     lat: 32.1168452,
-      //     height: 7,
-      //   },
-      //   {
-      //     lng: 118.9240342,
-      //     lat: 32.1170452,
-      //     height: 6,
-      //   },
-      //   {
-      //     lng: 118.9238342,
-      //     lat: 32.1172452,
-      //     height: 4,
-      //   },
-      // ];
-
-      // var btn = document.getElementById("btn");
-      // btn.onclick = function () {
-      //   var nameinfo = document.getElementById("nameinfo").value;
-      //   var startinfo = document.getElementById("startinfo").value;
-      //   var endinfo = document.getElementById("endinfo").value;
-      //   var URL =
-      //     "http://120.26.234.200:8080/location/history/?name=" +
-      //     nameinfo +
-      //     "&time1=" +
-      //     startinfo +
-      //     "&time2=" +
-      //     endinfo;
-      //   updateposition(URL);
-      // };
-
-      function updateposition(URL) {
-        // var path = [{ lng: 118.9239342, lat: 32.1169552, height: -2.2 }];
-        var path = [];
-        var audio = new Audio("./sources/warning2.mp3");
-        //console.log(URL);
-        AnimationAction_1.timeScale = 5;
-        AnimationAction_2.timeScale = 5;
-        AnimationAction_1.play();
-        AnimationAction_2.play();
-
-        // 本地数据测试
-        // var i = 1;
-        // setInterval(function () {
-        //   if (i > data.length - 1) {
-        //     i = 1;
-        //   }
-        //   cube.position.x = X_position(data[i].lng);
-        //   cube.position.y = Y_position(data[i].lat);
-        //   cube.position.z = data[i].height;
-        //   audio.load();
-        //   if (cube.position.z > 6.5) {
-        //     audio.play();
-        //     setTimeout(function () {
-        //       alert("越界了！！！！");
-        //     }, 1000);
-        //   }
-        //   console.log("data[i].lng: ", i, data[i].lng);
-        //   ShowLine(
-        //     data[i - 1].lng,
-        //     data[i - 1].lat,
-        //     data[i].lng,
-        //     data[i].lat,
-        //     data[i - 1].height,
-        //     data[i].height
-        //   );
-        //   i++;
-        // }, 2000);
-
-        // 接口测试;  高度比例尺 现实 : 模型 = 5 : 2
-        // 历史轨迹
-        // var i = 1;
-        // setInterval(function () {
-        //   $.ajax({
-        //     type: "GET",
-        //     url: "http://120.26.234.200:8080/location/test/",
-        //     dataType: "json",
-        //     success: function (data) {
-        //       console.log(data.data);
-        //       if (i > data.data.length - 1) {
-        //         i = 1;
-        //       }
-        //       cube.position.x = X_position(data.data[i].fields.lng);
-        //       cube.position.y = Y_position(data.data[i].fields.lat);
-        //       cube.position.z = (data.data[i].fields.high * 1 - 18) * 0.4 - 5.8;
-        //       document.getElementById("lng").innerHTML =
-        //         data.data[i].fields.lng;
-        //       document.getElementById("lat").innerHTML =
-        //         data.data[i].fields.lat;
-        //       document.getElementById("height").innerHTML = (
-        //         ((cube.position.z.toFixed(3) * 1 + 4.694) * 170) /
-        //         69
-        //       ).toFixed(3);
-        //       // console.log(i);
-        //       // console.log("i-1 ",data.data[i-1].fields.lng*1);
-        //       // console.log(data.data[i-1].fields.lat*1);
-        //       // console.log("i ",data.data[i].fields.lng*1);
-        //       // console.log(data.data[i].fields.lat*1);
-        //       ShowLine(
-        //         data.data[i - 1].fields.lng * 1,
-        //         data.data[i - 1].fields.lat * 1,
-        //         data.data[i].fields.lng * 1,
-        //         data.data[i].fields.lat * 1,
-        //         (data.data[i - 1].fields.high * 1 - 18) * 0.4 - 5.8,
-        //         (data.data[i].fields.high * 1 - 18) * 0.4 - 5.8
-        //       );
-        //       i++;
-        //     },
-        //     error: function (result) {
-        //       console.log(result.status);
-        //     },
-        //   });
-        // }, 1000);
-
-        // 实时路径
-        var shishipath = [];
-        setInterval(function () {
-          $.ajax({
-            type: "GET",
-            url: "http://120.26.234.200:8080/location/latest/",
-            dataType: "json",
-            success: function (data) {
-              console.log(data.data[data.data.length - 1].fields.lng);
-              console.log(data.data[data.data.length - 1].fields.lat);
-              // 5.8
-              console.log(data.data[data.data.length - 1].fields.high);
-              cube.position.x = X_position(
-                data.data[data.data.length - 1].fields.lng
-              );
-              cube.position.y = Y_position(
-                data.data[data.data.length - 1].fields.lat
-              );
-              cube.position.z =
-                (data.data[data.data.length - 1].fields.high * 1 - 18) * 0.4 -
-                4.82;
-              document.getElementById("lng").innerHTML =
-                data.data[data.data.length - 1].fields.lng;
-              document.getElementById("lat").innerHTML =
-                data.data[data.data.length - 1].fields.lat;
-              document.getElementById("height").innerHTML = (
-                ((cube.position.z * 1 + 4.694) * 170) /
-                69
-              ).toFixed(3); //cube.position.z = 0;
-              let newpath = {
-                lng: data.data[data.data.length - 1].fields.lng * 1,
-                lat: data.data[data.data.length - 1].fields.lat * 1,
-                height: cube.position.z * 1,
-              };
-              shishipath.push(newpath);
-              if (shishipath.length == 2) {
-                console.log(shishipath[0]);
-                console.log(shishipath[1]);
-                ShowLine(
-                  shishipath[0].lng,
-                  shishipath[0].lat,
-                  shishipath[1].lng,
-                  shishipath[1].lat,
-                  shishipath[0].height,
-                  shishipath[1].height
-                );
-                shishipath.shift();
-              }
-              //越界警报 越界高度为1.5米
-              audio.load();
-              if (
-                (((cube.position.z * 1 + 4.694) * 170) / 69).toFixed(2) * 1 >
-                1.5
-              ) {
-                audio.play();
-                setTimeout(function () {
-                  alert("越界了！！！！");
-                }, 1000);
-              }
-            },
-            error: function (result) {
-              console.log(result.status);
-            },
-          });
-        }, 1000);
+      console.log(minx, maxx, miny, maxy);
+      if (
+        workerlocation[0] >= minx &&
+        workerlocation[0] <= maxx &&
+        workerlocation[1] >= miny &&
+        workerlocation[1] <= maxy
+      ) {
+        var c = false;
+        var distanceArr = [];
+        let arrlast = [safearea[safearea.length - 1], safearea[0]];
+        let dislast = CheckDistance(arrlast, workerlocation);
+        distanceArr.push(dislast);
+        for (let j = 0; j < safearea.length - 1; j++) {
+          let arr = [safearea[j], safearea[j + 1]];
+          let dis = CheckDistance(arr, workerlocation);
+          distanceArr.push(dis);
+          if (
+            ((safearea[j][1] <= workerlocation[1] &&
+              workerlocation[1] < safearea[j + 1][1]) ||
+              (safearea[j + 1][1] <= workerlocation[1] &&
+                workerlocation[1] < safearea[j][1])) && (
+              workerlocation[0] <
+              ((safearea[j + 1][0] - safearea[j][0]) *
+                (workerlocation[1] - safearea[j][1])) /
+              (safearea[j + 1][1] - safearea[j][1]) +
+              safearea[j][0])
+          ) {
+            // 在安全区域内返回true
+            c = !c;
+            console.log(distanceArr, c, mindistance, Math.min(...distanceArr));
+            if (Math.min(...distanceArr) <= mindistance) {
+              // console.log("靠近危险区域");
+              // testcube.material.color.setHex(0xFFD700);
+              worker_part1.material.color.setHex(0xFFD700);
+              worker_part2.material.color.setHex(0xFFD700);
+            }
+            else {
+              // testcube.material.color.setHex(0x00FF00);
+              worker_part1.material.color.setHex(0x00FF00);
+              worker_part2.material.color.setHex(0x00FF00);
+            }
+          }
+        }
+        if (!c) {
+          // 不在安全区域内
+          // testcube.material.color.setHex(0xFF0000);
+          worker_part1.material.color.setHex(0xFF0000);
+          worker_part2.material.color.setHex(0xFF0000);
+        }
+        return c;
       }
+    }
 
-      //声明一个时钟对象
-      var clock = new THREE.Clock();
-      function render() {
-        renderer.render(scene, camera);
-        // 更新帧动画的时间
-        mixer.update(clock.getDelta());
-        //console.log("两帧渲染时间间隔" + clock.getDelta() + " s");
+    // 判断高程区域越界
+    function SkyCheck(WarinngArea, workLocation) {
+      console.log(workLocation);
+      // Step1: 确定投影范围
+      var point1 = [];
+      var point2 = [];
+      var point3 = [];
+      var point4 = [];
+      let tan = 0;
+      let sin = 0;
+      let cos = 0;
+      switch (true) {
+        /* 情况1：投影平行于y轴 */
+        case WarinngArea[0][0] == WarinngArea[1][0]:
+          point1 = [WarinngArea[0][0] - 1, WarinngArea[0][1]];
+          point2 = [WarinngArea[0][0] + 1, WarinngArea[0][1]];
+          point3 = [WarinngArea[1][0] - 1, WarinngArea[1][1]];
+          point4 = [WarinngArea[1][0] + 1, WarinngArea[1][1]];
+          break;
+        /* 情况2：投影平行于x轴 */
+        case WarinngArea[0][1] == WarinngArea[1][1]:
+          point1 = [WarinngArea[0][0], WarinngArea[0][1] + 1];
+          point2 = [WarinngArea[0][0], WarinngArea[0][1] - 1];
+          point3 = [WarinngArea[1][0], WarinngArea[1][1] + 1];
+          point4 = [WarinngArea[1][0], WarinngArea[1][1] - 1];
+          break;
+        /* 情况3：与x轴夹角小于90 (tan>0) */
+        case (WarinngArea[1][1] - WarinngArea[0][1]) /
+          (WarinngArea[1][0] - WarinngArea[0][0]) >
+          0:
+          tan =
+            (WarinngArea[1][1] - WarinngArea[0][1]) /
+            (WarinngArea[1][0] - WarinngArea[0][0]);
+          sin = Math.sin(Math.atan(tan));
+          cos = Math.cos(Math.atan(tan));
+          console.log(tan, sin, cos);
+          point1 = [WarinngArea[0][0] - sin, WarinngArea[0][1] + cos];
+          point2 = [WarinngArea[0][0] + sin, WarinngArea[0][1] - cos];
+          point3 = [WarinngArea[1][0] - sin, WarinngArea[1][1] + cos];
+          point4 = [WarinngArea[1][0] + sin, WarinngArea[1][1] - cos];
+        /* 情况4：与x轴夹角大于90 (tan<0) */
+        case (WarinngArea[1][1] - WarinngArea[0][1]) /
+          (WarinngArea[1][0] - WarinngArea[0][0]) <
+          0:
+          tan =
+            -(WarinngArea[1][1] - WarinngArea[0][1]) /
+            (WarinngArea[1][0] - WarinngArea[0][0]);
+          sin = Math.sin(Math.atan(tan));
+          cos = Math.cos(Math.atan(tan));
+          point1 = [WarinngArea[0][0] - sin, WarinngArea[0][1] - cos];
+          point2 = [WarinngArea[0][0] + sin, WarinngArea[0][1] + cos];
+          point3 = [WarinngArea[1][0] - sin, WarinngArea[1][1] - cos];
+          point4 = [WarinngArea[1][0] + sin, WarinngArea[1][1] + cos];
+        default:
+          break;
       }
-
-      //
-      function onKeyDown(event) {
-        switch (event.keyCode) {
-          case 37: //平面
-            cube.position.x += 1;
+      // console.log(point1, point2, point3, point4);
+      // Step2: 找出四个点中x和y值的 min
+      // ...为es6拓展运算符
+      let minx = Math.min(...[point1[0], point2[0], point3[0], point4[0]]);
+      let miny = Math.min(...[point1[1], point2[1], point3[1], point4[1]]);
+      let maxx = Math.max(...[point1[0], point2[0], point3[0], point4[0]]);
+      let maxy = Math.max(...[point1[1], point2[1], point3[1], point4[1]]);
+      if (
+        workLocation[0] >= minx &&
+        workLocation[0] <= maxx &&
+        workLocation[1] >= miny &&
+        workLocation[1] <= maxy
+      ) {
+        // Step3: 计算点到线的距离
+        let distance = CheckDistance(WarinngArea, workLocation);
+        console.log(distance);
+        switch (true) {
+          case distance <= 26.5:
+            return true;
             break;
-          case 39:
-            cube.position.x -= 1;
-            break;
-          case 38:
-            cube.position.z += 1;
-            break;
-          case 40:
-            cube.position.z -= 1;
-            break;
-          case 85:
-            cube.position.y += 1;
-            break;
-          case 68:
-            cube.position.y -= 1;
+          case distance > 26.5:
+            return false;
             break;
           default:
             break;
         }
+      } else {
+        return false;
       }
-      //
-      var cube, cube1, cube2, group;
-      function initCube() {
-        var geometry = new THREE.BoxGeometry(0.4, 0.4, 0.4);
-        var material = new THREE.MeshBasicMaterial({
-          color: "white",
-        });
-
-        cube = new THREE.Mesh(geometry, material);
-        scene.add(cube);
-
-        //加载3个正方体进行测试
-        group = new THREE.Group();
-        var cubegeometry = new THREE.BoxGeometry(1, 1, 1);
-        var cubematerial = new THREE.MeshBasicMaterial({ color: "white" });
-        cube1 = new THREE.Mesh(cubegeometry, cubematerial);
-        cube2 = new THREE.Mesh(cubegeometry, cubematerial);
-        cube1.name = "cube1";
-        cube2.name = "cube2";
-        group.add(cube1, cube2);
-        scene.add(group);
+    }
+    function CheckDistance(LineLocation, PointLocation) {
+      let dx = LineLocation[1][0] - LineLocation[0][0];
+      let dy = LineLocation[1][1] - LineLocation[0][1];
+      let dz = LineLocation[1][2] - LineLocation[0][2];
+      let k = 0;
+      //  确保两个点不是同一个点
+      if (dx != 0 || dy != 0 || dz != 0) {
+        //计算斜率
+        k =
+          (PointLocation[0] - LineLocation[0][0]) * dx +
+          (PointLocation[1] - LineLocation[0][1]) * dy +
+          (PointLocation[2] - LineLocation[0][2]) * dz;
+        k = k / (Math.pow(dx, 2) + Math.pow(dy, 2) + Math.pow(dz, 2));
       }
+      let FootPoint = [
+        LineLocation[0][0] + k * dx,
+        LineLocation[0][1] + k * dy,
+        LineLocation[0][2] + k * dz,
+      ];
+      let xx = PointLocation[0] - FootPoint[0];
+      let yy = PointLocation[1] - FootPoint[1];
+      let zz = PointLocation[2] - FootPoint[2];
+      let Distance = Math.sqrt(Math.pow(xx, 2) + Math.pow(yy, 2) + Math.pow(zz, 2));
+      return Distance;
+    }
 
-      initCube();
 
-      var AnimationAction_1, AnimationAction_2, mixer;
-      function initCurve() {
-        //创建轨迹线对象
-        var curve1 = new THREE.CatmullRomCurve3(
-          [
-            new THREE.Vector3(0, 0, 0),
-            new THREE.Vector3(-25, 10, 0),
-            new THREE.Vector3(8, 10, 0),
-          ],
-          false
-        );
+    function initobstacle() {
+      // 三维围栏（BYH）
 
-        var curve2 = new THREE.CatmullRomCurve3(
-          [
-            new THREE.Vector3(0, 0, 0),
-            new THREE.Vector3(10, 10, 10),
-            new THREE.Vector3(30, 0, 70),
-            new THREE.Vector3(10, 0, 50),
-          ],
-          false
-        );
+      // 区域越界
+      var test = [
+        [4, 3, 0],
+        [0, 11, 0],
+        [-17, 1, 0],
+        [-21, 7, 0],
+        [5, 22, 0],
+        [0, 31, 0],
+        [-37, 11, 0],
+        [-23, -14, 0],
+        [4, 3, 0],
+      ];
 
-        //利用顶点points初始化轨迹线
-        var points_1 = curve1.getPoints(100);
-        var points_2 = curve2.getPoints(100);
-        var geometry_1 = new THREE.Geometry();
-        var geometry_2 = new THREE.Geometry();
-        geometry_1.vertices = points_1;
-        geometry_2.vertices = points_2;
-        var material = new THREE.LineBasicMaterial({ color: 0xffffff });
-        var line1 = new THREE.Line(geometry_1, material);
-        var line2 = new THREE.Line(geometry_2, material);
-        scene.add(line1);
-        scene.add(line2);
+      // 高程越界
+      // let Skytest = [[-6, -6, 20], [6, -6, 18]];
+      var area2 = [[-12.2, -20, 28.5], [-24, 28, 28.5]];
+      var area3 = [[11.8, 0.5, 0], [11.8, 0.5, 10]];
+      var area4 = [[-12.2, -20, 28.5], [-24, 28, 28.5]];
+      var area5 = [[-12.2, -20, 5.5], [-24, 28, 5.5]];
 
-        // 声明一个数组用于存储时间序列
-        let arr = [];
-        for (let i = 0; i < 101; i++) {
-          arr.push(i);
-        }
-        // 生成一个时间序列
-        var times = new Float32Array(arr);
 
-        //创建第一根轨迹
-        var posArr_1 = [];
-        let duration = 101;
-        points_1.forEach((elem) => {
-          posArr_1.push(elem.x, elem.y, elem.z);
-        });
-        // 创建一个和时间序列相对应的位置坐标系列
-        var values_1 = new Float32Array(posArr_1);
-        // 创建一个帧动画的关键帧数据，曲线上的位置序列对应一个时间序列
-        var posTrack_1 = new THREE.KeyframeTrack(
-          "cube1.position",
-          times,
-          values_1
-        );
-        let clip_1 = new THREE.AnimationClip("default", duration, [posTrack_1]);
-        //var mixer_1 = new THREE.AnimationMixer(cube1);
-
-        //创建第二根轨迹
-        var posArr_2 = [];
-        points_2.forEach((elem) => {
-          posArr_2.push(elem.x, elem.y, elem.z);
-        });
-        var values_2 = new Float32Array(posArr_2);
-        var posTrack_2 = new THREE.KeyframeTrack(
-          "cube2.position",
-          times,
-          values_2
-        );
-        let clip_2 = new THREE.AnimationClip("default", duration, [posTrack_2]);
-        //var mixer_2 = new THREE.AnimationMixer(cube2);
-
-        mixer = new THREE.AnimationMixer(group);
-        AnimationAction_1 = mixer.clipAction(clip_1);
-        AnimationAction_2 = mixer.clipAction(clip_2);
-      }
-
-      initCurve();
-
-      var objects = [];
-      function initobstacle() {
-        //三维围栏
-        var geometryBox = box(4, 4, 4);
-
-        var lineSegments = new THREE.LineSegments(
-          geometryBox,
-          new THREE.LineDashedMaterial({
-            color: "red",
-            dashSize: 3,
-            gapSize: 1,
+      // 区域选择
+      function select() {
+        $(document).click(function () {
+          $(".select_module_con ul").slideUp();
+        })
+        var module = $(".select_result");
+        module.click(function (e) {
+          e.stopPropagation();
+          var ul = $(this).next();
+          ul.stop().slideToggle();
+          ul.children().click(function (e) {
+            console.log($(this).text()); e.stopPropagation();
+            $(this).parent().prev().children("span").text($(this).text());
+            ul.stop().slideUp();
+            switch ($(this).text()) {
+              case "上传文件":
+                document.getElementById("upLoadFile").style.display = "block";
+                break;
+              case "区域一":
+                // var path = [[0, 0, 0], [0, 1, 0], [0, 2, 0], [0, 3, 0], [0, 4, 0], [0, 5, 0], [0, 6, 0], [0, 7, 0], [0, 8, 0], [0, 9, 0], [0, 10, 0], [0, 11, 0], [0, 12, 0], [0, 13, 0], [0, 14, 0], [0, 15, 0], [0, 16, 0], [0, 17, 0], [0, 18, 0], [0, 19, 0], [0, 20, 0]];
+                // var p = 0;
+                clearInterval(timer);
+                worker_part1.material.color.setHex(0x00FF00);
+                worker_part2.material.color.setHex(0x00FF00);
+                addWall(test);
+                check_dangerous(test, area2, area3, area4, area5, "ground");
+                // setInterval(() => {
+                //   if (p == path.length) {
+                //     p = 0;
+                //   } else {
+                //     testcube.position.x = path[p][0];
+                //     testcube.position.y = path[p][1];
+                //     testcube.position.z = path[p][2];
+                //     console.log(testcube.position)
+                //     PlaneCheck(test, path[p]);
+                //     p++;
+                //   }
+                // }, 1000);
+                break;
+              case "区域二":
+                clearInterval(timer);
+                worker_part1.material.color.setHex(0x00FF00);
+                worker_part2.material.color.setHex(0x00FF00);
+                addSkycheck(new THREE.Vector3(area2[0][0], area2[0][1], area2[0][2]), new THREE.Vector3(area2[1][0], area2[1][1], area2[1][2]), 26);
+                check_dangerous(test, area2, area3, area4, area5, "sky");
+                break;
+              case "区域三":
+                clearInterval(timer);
+                worker_part1.material.color.setHex(0x00FF00);
+                worker_part2.material.color.setHex(0x00FF00);
+                var area3_cylinder = createCylinderByTwoPoints(new THREE.Vector3(area3[0][0], area3[0][1], area3[0][2]), new THREE.Vector3(area3[1][0], area3[1][1], area3[1][2]), 1.5);
+                scene.add(area3_cylinder);
+                check_dangerous(test, area2, area3, area4, area5, "pole");
+                break;
+              case "集中检测":
+                clearInterval(timer);
+                worker_part1.material.color.setHex(0x00FF00);
+                worker_part2.material.color.setHex(0x00FF00);
+                check_dangerous(test, area2, area3, area4, area5, "all");
+                break;
+              case "高程上":
+                addSkycheck(new THREE.Vector3(area4[0][0], area4[0][1], area4[0][2]), new THREE.Vector3(area4[1][0], area4[1][1], area4[1][2]), 1.5);
+                break;
+              case "高程下":
+                clearInterval(timer);
+                worker_part1.material.color.setHex(0x00FF00);
+                worker_part2.material.color.setHex(0x00FF00);
+                addSkycheck(new THREE.Vector3(area5[0][0], area5[0][1], area5[0][2]), new THREE.Vector3(area5[1][0], area5[1][1], area5[1][2]), 1.5);
+                check_dangerous(test, area2, area3, area4, area5, "skylow");
+                break;
+              default:
+                break;
+            }
           })
-        );
-        lineSegments.computeLineDistances();
-
-        objects.push(lineSegments);
-        lineSegments.position.y = 8; // y = [6,10]
-        lineSegments.position.z = 8; //z = [6,10]
-        lineSegments.position.x = 8; //x = [6,10]
-        scene.add(lineSegments);
-
-        //二维围栏
-        geometryBox = rectangle(8, 16, 0);
-
-        linearea = new THREE.LineSegments(
-          geometryBox,
-          new THREE.LineDashedMaterial({
-            color: "red",
-            dashSize: 3,
-            gapSize: 1,
-          })
-        );
-        linearea.computeLineDistances();
-        linearea.rotation.z = (Math.PI * 110) / 180;
-
-        objects.push(linearea);
-        linearea.position.y = 4; // y = [0,8]
-        linearea.position.z = 0; //z = ~
-        linearea.position.x = -18; //x = [-10,-26]
-        scene.add(linearea);
+        })
       }
-      // 空间围栏
-      function box(width, height, depth) {
-        (width = width * 0.5), (height = height * 0.5), (depth = depth * 0.5);
+      $(function () {
+        select();
+      })
 
-        var geometry = new THREE.BufferGeometry();
-        var position = [];
-
-        position.push(
-          -width,
-          -height,
-          -depth,
-          -width,
-          height,
-          -depth,
-
-          -width,
-          height,
-          -depth,
-          width,
-          height,
-          -depth,
-
-          width,
-          height,
-          -depth,
-          width,
-          -height,
-          -depth,
-
-          width,
-          -height,
-          -depth,
-          -width,
-          -height,
-          -depth,
-
-          -width,
-          -height,
-          depth,
-          -width,
-          height,
-          depth,
-
-          -width,
-          height,
-          depth,
-          width,
-          height,
-          depth,
-
-          width,
-          height,
-          depth,
-          width,
-          -height,
-          depth,
-
-          width,
-          -height,
-          depth,
-          -width,
-          -height,
-          depth,
-
-          -width,
-          -height,
-          -depth,
-          -width,
-          -height,
-          depth,
-
-          -width,
-          height,
-          -depth,
-          -width,
-          height,
-          depth,
-
-          width,
-          height,
-          -depth,
-          width,
-          height,
-          depth,
-
-          width,
-          -height,
-          -depth,
-          width,
-          -height,
-          depth
-        );
-
-        geometry.setAttribute(
-          "position",
-          new THREE.Float32BufferAttribute(position, 3)
-        );
-
-        return geometry;
+      // 开始画线
+      document.getElementById("BeginShowLine").onclick = function () {
+        ifshowline = true;
+        document.getElementById("BeginShowLine").style.display = "none";
+        document.getElementById("EndShowLine").style.display = "block";
+        // var i = 0;
+        // var shishipath = [];
+        // setInterval(() => {
+        //   if (ifshowline) {
+        //     if (i == path.length) {
+        //       i = 0;
+        //     } else {
+        //       let newpath = {
+        //         x: path[i][0],
+        //         y: path[i][1],
+        //         z: 0,
+        //       };
+        //       shishipath.push(newpath);
+        //       console.log(shishipath);
+        //       console.log(shishipath.length);
+        //       if (shishipath.length == 2) {
+        //         ShowLine(
+        //           shishipath[0].x,
+        //           shishipath[1].x,
+        //           shishipath[0].y,
+        //           shishipath[1].y,
+        //           shishipath[0].z,
+        //           shishipath[1].z
+        //         );
+        //         shishipath.shift();
+        //         i++;
+        //       }
+        //     }
+        //   }
+        // }, 1000);
+      }
+      // 停止画线
+      document.getElementById("EndShowLine").onclick = function () {
+        ifshowline = false;
+        document.getElementById("BeginShowLine").style.display = "block";
+        document.getElementById("EndShowLine").style.display = "none";
+      }
+      // 关闭警报
+      document.getElementById("closebtn").onclick = function () {
+        nowarning = true;
+        document.getElementById("openbtn").style.display = "block";
+        document.getElementById("closebtn").style.display = "none";
+      }
+      // 打开警报
+      document.getElementById("openbtn").onclick = function () {
+        nowarning = false;
+        document.getElementById("openbtn").style.display = "none";
+        document.getElementById("closebtn").style.display = "block";
       }
 
-      //平面围栏
-      function rectangle(width, height, depth) {
-        (width = width * 0.5), (height = height * 0.5), (depth = depth * 0.5);
+    }
 
-        var geometry = new THREE.BufferGeometry();
-        var position = [];
-        position.push(
-          -width,
-          -height,
-          -depth,
-          -width,
-          height,
-          -depth,
 
-          -width,
-          height,
-          -depth,
-          width,
-          height,
-          -depth,
+    //窗口变动触发的函数
+    function onWindowResize() {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    }
 
-          width,
-          height,
-          -depth,
-          width,
-          -height,
-          -depth,
+    var spritel;
 
-          width,
-          -height,
-          -depth,
-          -width,
-          -height,
-          -depth
-        );
-        geometry.setAttribute(
-          "position",
-          new THREE.Float32BufferAttribute(position, 3)
-        );
+    function position() {
+      scene.remove(spritel);
+      let center = worker_part2.position.clone(),
+        nameStr = "姓名: name",
+        numberStr = "工号: 001",
+        zStr = "海拔:" + (center.z.toFixed(3)) / 2.2 + " 米";
 
-        return geometry;
-      }
+      let canvas = document.createElement("canvas");
+      canvas.width = 300;
+      canvas.height = 400;
+      let context = canvas.getContext("2d");
+      context.font = "Bold 50px Georgia";
+      context.fillStyle = "#ffffff";
+      context.fillText(nameStr, 0, 80);
+      context.fillText(numberStr, 0, 160);
+      context.fillText(zStr, 0, 240);
+      let spritelTexture = new THREE.Texture(canvas);
+      spritelTexture.needsUpdate = true;
+      let spriteMaterial = new THREE.SpriteMaterial({
+        map: spritelTexture,
+      });
+      spritel = new THREE.Sprite(spriteMaterial);
+      spritel.scale.set(5, 2.5, 1);
+      spritel.position.set(center.x + 3, center.y - 2, center.z + 2);
+      scene.add(spritel);
+    }
 
-      //窗口变动触发的函数
-      function onWindowResize() {
-        camera.aspect = window.innerWidth / window.innerHeight;
-        camera.updateProjectionMatrix();
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        //composer.setSize( window.innerWidth, window.innerHeight );
-        //effectFXAA.uniforms[ 'resolution' ].value.set( 1 / window.innerWidth, 1 / window.innerHeight );
-      }
+    function animate() {
+      //更新控制器
+      render();
 
-      function collision(CUBE) {
-        var judge1 =
-          CUBE.position.x - 0.5 > 10 ||
-          CUBE.position.x + 0.5 < 6 ||
-          CUBE.position.y - 0.5 > 10 ||
-          CUBE.position.y + 0.5 < 6 ||
-          CUBE.position.z - 0.5 > 10 ||
-          CUBE.position.z + 0.5 < 6;
-        var judge2 = false;
-        var center1 = new THREE.Vector2(CUBE.position.x, CUBE.position.y);
-        var xVt1 = new THREE.Vector2(0.5, 0);
-        var yVt1 = new THREE.Vector2(0, 0.5);
-        var center2 = new THREE.Vector2(
-          linearea.position.x,
-          linearea.position.y
-        );
+      //更新性能插件
+      stats.update();
 
-        var xVt2 = new THREE.Vector2(7.5175405, 2.736161);
-        var yVt2 = new THREE.Vector2(1.3680805, -3.75877);
-        const vectorAB = center1.clone().sub(center2); // 矩形中心连线
-        if (
-          Math.abs(xVt1.dot(xVt1)) +
-            Math.abs(xVt2.dot(xVt1)) +
-            Math.abs(yVt1.dot(xVt1)) +
-            Math.abs(yVt2.dot(xVt1)) <=
-          Math.abs(vectorAB.dot(xVt1))
-        )
-          judge2 = true;
-        if (
-          Math.abs(xVt1.dot(xVt2)) +
-            Math.abs(xVt2.dot(xVt2)) +
-            Math.abs(yVt1.dot(xVt2)) +
-            Math.abs(yVt2.dot(xVt2)) <=
-          Math.abs(vectorAB.dot(xVt2))
-        )
-          judge2 = true;
-        if (
-          Math.abs(xVt1.dot(yVt1)) +
-            Math.abs(xVt2.dot(yVt1)) +
-            Math.abs(yVt1.dot(yVt1)) +
-            Math.abs(yVt2.dot(yVt1)) <=
-          Math.abs(vectorAB.dot(yVt1))
-        )
-          judge2 = true;
-        if (
-          Math.abs(xVt1.dot(yVt2)) +
-            Math.abs(xVt2.dot(yVt2)) +
-            Math.abs(yVt1.dot(yVt2)) +
-            Math.abs(yVt2.dot(yVt2)) <=
-          Math.abs(vectorAB.dot(yVt2))
-        )
-          judge2 = true;
-        if (judge1 && judge2) {
-          CUBE.material.color.setHex(0xffffff);
-        } else {
-          CUBE.material.color.setHex(0xff0000);
-          //console.log("越界了！！");
-        }
-      }
+      controls.update();
+      position();
+      requestAnimationFrame(animate);
+    }
 
-      var spritel;
-      function position() {
-        scene.remove(spritel);
-        let center = cube.position.clone(),
-          nameStr = "姓名: " + "海明",
-          numberStr = "工号: " + "1001",
-          xStr = "x:" + center.x.toFixed(3),
-          yStr = "y:" + center.y.toFixed(3),
-          zStr =
-            "z:" +
-            (((center.z.toFixed(3) * 1 + 4.694) * 170) / 69).toFixed(3) +
-            " 米";
+    function draw() {
+      init();
+      initobstacle();
+      animate();
+      window.onresize = onWindowResize;
+    }
+    draw();
+  </script>
+</body>
 
-        let canvas = document.createElement("canvas");
-        canvas.width = 300;
-        canvas.height = 420;
-        let context = canvas.getContext("2d");
-        context.font = "Bold 52px Georgia";
-        context.fillStyle = "#fc427b";
-        context.fillText(nameStr, 0, 80);
-        context.fillText(numberStr, 0, 160);
-        context.fillText(xStr, 0, 240);
-        context.fillText(yStr, 0, 320);
-        context.fillText(zStr, 0, 400);
-        let spritelTexture = new THREE.Texture(canvas);
-        spritelTexture.needsUpdate = true;
-        let spriteMaterial = new THREE.SpriteMaterial({ map: spritelTexture });
-        spritel = new THREE.Sprite(spriteMaterial);
-        spritel.scale.set(5, 2.5, 1);
-        spritel.position.set(center.x + 3, center.y - 2, center.z + 2);
-        scene.add(spritel);
-      }
-
-      function animate() {
-        //updateposition();
-        //更新控制器
-        render();
-
-        //更新性能插件
-        stats.update();
-
-        controls.update();
-        collision(cube);
-        collision(cube1);
-        collision(cube2);
-        position();
-        requestAnimationFrame(animate);
-        //composer.render();
-      }
-
-      function draw() {
-        init();
-        initobstacle();
-
-        updateposition();
-        animate();
-        window.onresize = onWindowResize;
-      }
-      draw();
-    </script>
-  </body>
 </html>

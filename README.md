@@ -1,4 +1,4 @@
-# bdz-project
+# 国家电网有限公司变电站改扩建管理系统
 
 ## Project setup
 ```

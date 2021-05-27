@@ -352,27 +352,50 @@
 
       //初始化模型
       //添加辅助坐标
-      // var helper = new THREE.AxesHelper(50);
-      // scene.add(helper);
-      // mtlloader = new MTLLoader();
-      // objloader = new OBJLoader();
+      var helper = new THREE.AxesHelper(50);
+      scene.add(helper);
+      mtlloader = new MTLLoader();
+      objloader = new OBJLoader();
+      // mtlloader.load("./models/okk6.mtl", function (mtl) {
       // mtlloader.load("./4_29/mnbdz.mtl", function (mtl) {
-      //   // mtlloader.load("./models/okk6.mtl", function (mtl) {
-      //   mtl.preload();
-      //   objloader.setMaterials(mtl);
-      //   objloader.load("./4_29/mnbdz.obj", function (obj) {
-      //     // objloader.load("./models/okk6.obj", function (obj) {
-      //     obj.rotateZ(0);
-      //     obj.scale.set(3, 3, 3);
-      //     // obj.position.x = -7.1;
-      //     // obj.position.y = -82;
-      //     // obj.position.z = 56;
-      //     obj.position.x = 0;
-      //     obj.position.y = 0;
-      //     obj.position.z = -100;
-      //     scene.add(obj);
-      //   });
-      // });
+      // mtlloader.load("./5_25/bdz.mtl", function (mtl) {
+      // mtlloader.load("./5_26/mnbdz.mtl", function (mtl) {
+      // mtlloader.load("./5_27_1/bdz.mtl", function (mtl) {
+      // mtlloader.load("./5_27_2/blz.mtl", function (mtl) {
+      // mtlloader.load("./5_27_3/bbb.mtl", function (mtl) {
+      mtlloader.load("./5_27_4/ssssss1.mtl", function (mtl) {
+        mtl.preload();
+        objloader.setMaterials(mtl);
+        // objloader.load("./models/okk6.obj", function (obj) {
+        // objloader.load("./4_29/mnbdz.obj", function (obj) {
+        // objloader.load("./5_25/bdz.obj", function (obj) {
+        // objloader.load("./5_26/mnbdz.obj", function (obj) {
+        // objloader.load("./5_27_1/bdz.obj", function (obj) {
+        // objloader.load("./5_27_2/blz.obj", function (obj) {
+        // objloader.load("./5_27_3/bbb.obj", function (obj) {
+        objloader.load("./5_27_4/ssssss1.obj", function (obj) {
+          obj.rotateZ(0);
+          obj.scale.set(3, 3, 3);
+          // 学校模型okk6
+          // obj.position.x = -7.1;
+          // obj.position.y = -82;
+          // obj.position.z = 56;
+
+          // 4_29
+          // obj.position.x = 0;
+          // obj.position.y = 0;
+          // obj.position.z = -100;
+
+          // 5_25
+          obj.rotateX(Math.PI / 2);
+          obj.position.x = -194;
+          obj.position.y = 29;
+          obj.position.z = -142;
+
+          scene.add(obj);
+        });
+      });
+
 
       //初始化性能插件
       stats = new Stats();

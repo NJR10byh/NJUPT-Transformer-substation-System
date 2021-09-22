@@ -7,12 +7,13 @@
   <!-- jQuery备用CDN -->
   <!-- <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script> -->
   <script src="js/jquery-3.1.1.js"></script>
-  <script src="js/bootstrap.js"></script>
   <script src="js/adapter.js"></script>
   <script src="js/platform.js"></script>
   <script src="js/h5splayer.js"></script>
   <script src="js/h5splayerhelper.js"></script>
+
   <link rel="stylesheet" type="text/css" href="css/h5splayer.css" />
+
   <style type="text/css">
     html,
     body {
@@ -216,6 +217,7 @@
 </head>
 
 <body>
+  <div class="fakeLoader"></div>
   <div class="top">
     <div class="histroySearch">
       <span>人员姓名：</span>
@@ -284,8 +286,9 @@
     import { GUI } from "./lib/examples/jsm/libs/dat.gui.module.js";
 
     import { OrbitControls } from "./lib/examples/jsm/controls/OrbitControls.js";
-    import { MTLLoader } from "./lib/examples/jsm/loaders/MTLLoader.js";
-    import { OBJLoader } from "./lib/examples/jsm/loaders/OBJLoader.js";
+    // import { MTLLoader } from "./lib/examples/jsm/loaders/MTLLoader.js";
+    // import { OBJLoader } from "./lib/examples/jsm/loaders/OBJLoader.js";
+    import { FBXLoader } from "./lib/examples/jsm/loaders/FBXLoader.js";
     import { EffectComposer } from "./lib/examples/jsm/postprocessing/EffectComposer.js";
     import { RenderPass } from "./lib/examples/jsm/postprocessing/RenderPass.js";
     import { ShaderPass } from "./lib/examples/jsm/postprocessing/ShaderPass.js";
@@ -294,7 +297,8 @@
 
     var nowarning = false; // 是否报警
     var ifshowline = false; // 是否画线
-    var audio = new Audio("./sources/warning.mp3"); // 加载音频
+    var audio1 = new Audio("./sources/level1.mp3"); // 加载音频
+    var audio2 = new Audio("./sources/level2.mp3"); // 加载音频
 
     //加入定时器
     var timer = null;
@@ -306,7 +310,7 @@
 
     //场景参数变量
     var renderer, camera, gui, light_1, light_2, light_3;
-    var mtlloader, objloader;
+    var mtlloader, objloader, fbxloader, gltfloader;
     var stats, controls;
 
     var linearea;
@@ -354,46 +358,54 @@
       //添加辅助坐标
       var helper = new THREE.AxesHelper(50);
       scene.add(helper);
-      mtlloader = new MTLLoader();
-      objloader = new OBJLoader();
-      // mtlloader.load("./models/okk6.mtl", function (mtl) {
-      // mtlloader.load("./4_29/mnbdz.mtl", function (mtl) {
-      // mtlloader.load("./5_25/bdz.mtl", function (mtl) {
-      // mtlloader.load("./5_26/mnbdz.mtl", function (mtl) {
-      // mtlloader.load("./5_27_1/bdz.mtl", function (mtl) {
-      // mtlloader.load("./5_27_2/blz.mtl", function (mtl) {
-      // mtlloader.load("./5_27_3/bbb.mtl", function (mtl) {
-      mtlloader.load("./5_27_4/ssssss1.mtl", function (mtl) {
-        mtl.preload();
-        objloader.setMaterials(mtl);
-        // objloader.load("./models/okk6.obj", function (obj) {
-        // objloader.load("./4_29/mnbdz.obj", function (obj) {
-        // objloader.load("./5_25/bdz.obj", function (obj) {
-        // objloader.load("./5_26/mnbdz.obj", function (obj) {
-        // objloader.load("./5_27_1/bdz.obj", function (obj) {
-        // objloader.load("./5_27_2/blz.obj", function (obj) {
-        // objloader.load("./5_27_3/bbb.obj", function (obj) {
-        objloader.load("./5_27_4/ssssss1.obj", function (obj) {
-          obj.rotateZ(0);
-          obj.scale.set(3, 3, 3);
-          // 学校模型okk6
-          // obj.position.x = -7.1;
-          // obj.position.y = -82;
-          // obj.position.z = 56;
+      // mtlloader = new MTLLoader();
+      // objloader = new OBJLoader();
+      fbxloader = new FBXLoader();
 
-          // 4_29
-          // obj.position.x = 0;
-          // obj.position.y = 0;
-          // obj.position.z = -100;
+      // obj+mtl
+      // // mtlloader.load("./models/okk6.mtl", function (mtl) {
+      //   mtlloader.load("./4_29/mnbdz.mtl", function (mtl) {
+      //   mtl.preload();
+      //   objloader.setMaterials(mtl);
 
-          // 5_25
-          obj.rotateX(Math.PI / 2);
-          obj.position.x = -194;
-          obj.position.y = 29;
-          obj.position.z = -142;
+      //   // var mat = mtl.materials;
+      //   // for (var key in mat) {
+      //   //   console.log(key);
+      //   //   mat[key].transparent = true; // 类似如此修改材质属性即可
+      //   // }
+      //   // objloader.load("./models/okk6.obj", function (obj) {
+      //     objloader.load("./4_29/mnbdz.obj", function (obj) {
+      //     obj.scale.set(3, 3, 3);
+      //     // 学校模型okk6
+      //     obj.rotateZ(0);
+      //     obj.position.x = -7.1;
+      //     obj.position.y = -82;
+      //     obj.position.z = 56;
 
-          scene.add(obj);
+      //     // 4_29
+      //     // obj.rotateZ(0);
+      //     // obj.position.x = 0;
+      //     // obj.position.y = 0;
+      //     // obj.position.z = -100;
+
+      //     scene.add(obj);
+      //   });
+      // });
+
+      // 场景fbx
+      fbxloader.load('./6_9/bdz/bdz.fbx', function (object) {
+        object.traverse(function (child) {
+          if (child.isMesh) {
+            child.castShadow = true;
+            child.receiveShadow = true;
+          }
         });
+        object.scale.set(3, 3, 3);
+        object.rotateX(Math.PI / 2);
+        object.position.x = -187;
+        object.position.y = 30;
+        object.position.z = -142;
+        scene.add(object);
       });
 
 
@@ -460,7 +472,7 @@
 
     // 初始化模型
     var cube, cube1, cube2, testcube, worker_part1, worker_part2, camera_module1, camera_module2, camera_module3, camera_stick1, camera_stick2, camera_stick3, posttime, mindistance;
-    mindistance = 3;// 距离围栏最小报警距离
+    mindistance = 1.5;// 距离围栏最小报警距离
 
     function initCube() {
       var geometryOrign = new THREE.BoxGeometry(1, 1, 1);
@@ -475,9 +487,6 @@
       cube = new THREE.Mesh(geometrytest, materialtest);// 原点
       testcube = new THREE.Mesh(geometrytest, materialtest);// 原点
       // scene.add(cube);
-      // cube.position.x = 0;
-      // cube.position.y = 8;
-      // cube.position.z = 4;
       scene.add(testcube);
 
       /* 模拟人物(球+圆锥) */
@@ -521,24 +530,24 @@
       shape2.lineTo(0, 0);//第5点
       /**创建轮廓的扫描轨迹(3D样条曲线)*/
       var curve1_1 = new THREE.CatmullRomCurve3([
-        new THREE.Vector3(6, -34, 11),
-        new THREE.Vector3(6, -32, 10)
+        new THREE.Vector3(5, -34.3, 11),
+        new THREE.Vector3(5, -32.3, 10)
       ]);
       var curve1_2 = new THREE.CatmullRomCurve3([
-        new THREE.Vector3(-74, -54, 11),
-        new THREE.Vector3(-74, -52, 10),
+        new THREE.Vector3(-74, -53, 11),
+        new THREE.Vector3(-74, -51, 10),
       ]);
       var curve1_3 = new THREE.CatmullRomCurve3([
         new THREE.Vector3(-44.5, 32, 9),
         new THREE.Vector3(-44.5, 30, 8)
       ]);
       var curve2_1 = new THREE.CatmullRomCurve3([
-        new THREE.Vector3(6, -34.4, 9),
-        new THREE.Vector3(6, -33, 10.5)
+        new THREE.Vector3(5, -34.7, 9),
+        new THREE.Vector3(5, -33.3, 10.5)
       ]);
       var curve2_2 = new THREE.CatmullRomCurve3([
-        new THREE.Vector3(-74, -54.4, 9),
-        new THREE.Vector3(-74, -53, 10.5)
+        new THREE.Vector3(-74, -53.4, 9),
+        new THREE.Vector3(-74, -52, 10.5)
       ]);
       var curve2_3 = new THREE.CatmullRomCurve3([
         new THREE.Vector3(-44.5, 32.4, 7),
@@ -658,7 +667,7 @@
     }
 
     setInterval(() => {
-      // SafeHat();
+      SafeHat();
     }, 1000);
 
     // 经纬度同坐标转换
@@ -749,42 +758,7 @@
                   }
                 }
                 // 平面越界警报
-                if (!PlaneCheck(test, [X_position(res.data[res.data.length - 1].fields.lng), Y_position(res.data[res.data.length - 1].fields.lat), Z_position(res.data[res.data.length - 1].fields.high)])) {
-                  // console.log("超出安全区域了！");
-                  worker_part1.material.color.setHex(0xff0000);
-                  worker_part2.material.color.setHex(0xff0000);
-                  if (posttime == 6) {
-                    posttime = 1;
-                    if (!nowarning) {
-                      audio.pause();
-                      audio.load();
-                      audio.play();
-                    }
-                    $.ajax({
-                      type: "POST",
-                      url: "http://124.70.106.8:8080/device/alarm/",
-                      data: {
-                        workername: "name",
-                        lng: res.data[res.data.length - 1].fields.lng,
-                        lat: res.data[res.data.length - 1].fields.lat,
-                        high: res.data[res.data.length - 1].fields.high
-                      },
-                      success: function (res) {
-                        console.log(res)
-                      }
-                    })
-                  } else {
-                    audio.pause();
-                    audio.load();
-                    posttime++;
-                  }
-                } else {
-                  // console.log("未超出安全区域");
-                  worker_part1.material.color.setHex(0x00FF00);
-                  worker_part2.material.color.setHex(0x00FF00);
-                  audio.pause();
-                  audio.load();
-                }
+                PlaneCheck(test, [X_position(res.data[res.data.length - 1].fields.lng), Y_position(res.data[res.data.length - 1].fields.lat), Z_position(res.data[res.data.length - 1].fields.high)]);
                 break;
               case "sky":
                 // 高程越界警报
@@ -795,9 +769,11 @@
                   if (posttime == 6) {
                     posttime = 1;
                     if (!nowarning) {
-                      audio.pause();
-                      audio.load();
-                      audio.play();
+                      audio1.pause();
+                      audio2.pause();
+                      audio1.load();
+                      audio2.load();
+                      audio2.play();
                     }
                     $.ajax({
                       type: "POST",
@@ -813,14 +789,18 @@
                       }
                     })
                   } else {
-                    audio.pause();
-                    audio.load();
+                    audio1.pause();
+                    audio2.pause();
+                    audio1.load();
+                    audio2.load();
                     posttime++;
                   }
                 } else {
                   // console.log("未进入危险区域");
-                  audio.pause();
-                  audio.load();
+                  audio1.pause();
+                  audio2.pause();
+                  audio1.load();
+                  audio2.load();
                   worker_part1.material.color.setHex(0x00FF00);
                   worker_part2.material.color.setHex(0x00FF00);
                 }
@@ -840,9 +820,11 @@
                   if (posttime == 6) {
                     posttime = 1;
                     if (!nowarning) {
-                      audio.pause();
-                      audio.load();
-                      audio.play();
+                      audio1.pause();
+                      audio2.pause();
+                      audio1.load();
+                      audio2.load();
+                      audio2.play();
                     }
                     $.ajax({
                       type: "POST",
@@ -858,14 +840,18 @@
                       }
                     })
                   } else {
-                    audio.pause();
-                    audio.load();
+                    audio1.pause();
+                    audio2.pause();
+                    audio1.load();
+                    audio2.load();
                     posttime++;
                   }
                 } else {
                   // console.log("未进入危险区域");
-                  audio.pause();
-                  audio.load();
+                  audio1.pause();
+                  audio2.pause();
+                  audio1.load();
+                  audio2.load();
                   worker_part1.material.color.setHex(0x00FF00);
                   worker_part2.material.color.setHex(0x00FF00);
                 }
@@ -874,42 +860,7 @@
                 switch (true) {
                   case Z_position(res.data[res.data.length - 1].fields.high, latesthigh) < 4:
                     // 平面越界警报
-                    if (!PlaneCheck(test, [X_position(res.data[res.data.length - 1].fields.lng), Y_position(res.data[res.data.length - 1].fields.lat), Z_position(res.data[res.data.length - 1].fields.high)])) {
-                      console.log("超出安全区域了！");
-                      worker_part1.material.color.setHex(0xff0000);
-                      worker_part2.material.color.setHex(0xff0000);
-                      if (posttime == 6) {
-                        posttime = 1;
-                        if (!nowarning) {
-                          audio.pause();
-                          audio.load();
-                          audio.play();
-                        }
-                        $.ajax({
-                          type: "POST",
-                          url: "http://124.70.106.8:8080/device/alarm/",
-                          data: {
-                            workername: "name",
-                            lng: res.data[res.data.length - 1].fields.lng,
-                            lat: res.data[res.data.length - 1].fields.lat,
-                            high: res.data[res.data.length - 1].fields.high
-                          },
-                          success: function (res) {
-                            console.log(res)
-                          }
-                        })
-                      } else {
-                        audio.pause();
-                        audio.load();
-                        posttime++;
-                      }
-                    } else {
-                      // console.log("未超出安全区域");
-                      worker_part1.material.color.setHex(0x00FF00);
-                      worker_part2.material.color.setHex(0x00FF00);
-                      audio.pause();
-                      audio.load();
-                    }
+                    PlaneCheck(test, [X_position(res.data[res.data.length - 1].fields.lng), Y_position(res.data[res.data.length - 1].fields.lat), Z_position(res.data[res.data.length - 1].fields.high)]);
                     break;
                   case Z_position(res.data[res.data.length - 1].fields.high, latesthigh) >= 4:
                     // 高程越界警报
@@ -920,9 +871,11 @@
                       if (posttime == 6) {
                         posttime = 1;
                         if (!nowarning) {
-                          audio.pause();
-                          audio.load();
-                          audio.play();
+                          audio1.pause();
+                          audio2.pause();
+                          audio1.load();
+                          audio2.load();
+                          audio2.play();
                         }
                         $.ajax({
                           type: "POST",
@@ -938,14 +891,18 @@
                           }
                         })
                       } else {
-                        audio.pause();
-                        audio.load();
+                        audio1.pause();
+                        audio2.pause();
+                        audio1.load();
+                        audio2.load();
                         posttime++;
                       }
                     } else {
                       // console.log("未进入危险区域");
-                      audio.pause();
-                      audio.load();
+                      audio1.pause();
+                      audio2.pause();
+                      audio1.load();
+                      audio2.load();
                       worker_part1.material.color.setHex(0x00FF00);
                       worker_part2.material.color.setHex(0x00FF00);
                     }
@@ -965,9 +922,11 @@
                       if (posttime == 6) {
                         posttime = 1;
                         if (!nowarning) {
-                          audio.pause();
-                          audio.load();
-                          audio.play();
+                          audio1.pause();
+                          audio2.pause();
+                          audio1.load();
+                          audio2.load();
+                          audio2.play();
                         }
                         $.ajax({
                           type: "POST",
@@ -983,14 +942,18 @@
                           }
                         })
                       } else {
-                        audio.pause();
-                        audio.load();
+                        audio1.pause();
+                        audio2.pause();
+                        audio1.load();
+                        audio2.load();
                         posttime++;
                       }
                     } else {
                       // console.log("未进入危险区域");
-                      audio.pause();
-                      audio.load();
+                      audio1.pause();
+                      audio2.pause();
+                      audio1.load();
+                      audio2.load();
                       worker_part1.material.color.setHex(0x00FF00);
                       worker_part2.material.color.setHex(0x00FF00);
                     }
@@ -1008,9 +971,11 @@
                   if (posttime == 6) {
                     posttime = 1;
                     if (!nowarning) {
-                      audio.pause();
-                      audio.load();
-                      audio.play();
+                      audio1.pause();
+                      audio2.pause();
+                      audio1.load();
+                      audio2.load();
+                      audio2.play();
                     }
                     $.ajax({
                       type: "POST",
@@ -1026,14 +991,18 @@
                       }
                     })
                   } else {
-                    audio.pause();
-                    audio.load();
+                    audio1.pause();
+                    audio2.pause();
+                    audio1.load();
+                    audio2.load();
                     posttime++;
                   }
                 } else {
                   // console.log("未进入危险区域");
-                  audio.pause();
-                  audio.load();
+                  audio1.pause();
+                  audio2.pause();
+                  audio1.load();
+                  audio2.load();
                   worker_part1.material.color.setHex(0x00FF00);
                   worker_part2.material.color.setHex(0x00FF00);
                 }
@@ -1218,13 +1187,6 @@
 
     //添加圆柱体
     function addSkycheck(start, end, radius) {
-      // 计算长度
-      let dx = Math.abs(start - end.x);
-      let dy = Math.abs(start.y - end.y);
-      let dz = Math.abs(start.z - end.z);
-      let width = Math.sqrt(
-        Math.pow(dx, 2) + Math.pow(dy, 2) + Math.pow(dz, 2)
-      );
       var cylinder = createCylinderByTwoPoints(start, end, radius);
       scene.add(cylinder);
 
@@ -1342,7 +1304,6 @@
           maxy = safearea[i][1];
         }
       }
-      console.log(minx, maxx, miny, maxy);
       if (
         workerlocation[0] >= minx &&
         workerlocation[0] <= maxx &&
@@ -1351,12 +1312,9 @@
       ) {
         var c = false;
         var distanceArr = [];
-        let arrlast = [safearea[safearea.length - 1], safearea[0]];
-        let dislast = CheckDistance(arrlast, workerlocation);
-        distanceArr.push(dislast);
         for (let j = 0; j < safearea.length - 1; j++) {
           let arr = [safearea[j], safearea[j + 1]];
-          let dis = CheckDistance(arr, workerlocation);
+          let dis = CheckDistance(arr, workerlocation, safearea);
           distanceArr.push(dis);
           if (
             ((safearea[j][1] <= workerlocation[1] &&
@@ -1371,25 +1329,68 @@
           ) {
             // 在安全区域内返回true
             c = !c;
-            console.log(distanceArr, c, mindistance, Math.min(...distanceArr));
-            if (Math.min(...distanceArr) <= mindistance) {
-              // console.log("靠近危险区域");
-              // testcube.material.color.setHex(0xFFD700);
-              worker_part1.material.color.setHex(0xFFD700);
-              worker_part2.material.color.setHex(0xFFD700);
-            }
-            else {
-              // testcube.material.color.setHex(0x00FF00);
-              worker_part1.material.color.setHex(0x00FF00);
-              worker_part2.material.color.setHex(0x00FF00);
-            }
           }
         }
         if (!c) {
           // 不在安全区域内
-          // testcube.material.color.setHex(0xFF0000);
           worker_part1.material.color.setHex(0xFF0000);
           worker_part2.material.color.setHex(0xFF0000);
+          // audio1.pause();
+          // audio2.pause();
+          // audio1.load();
+          // audio2.load();
+          // audio2.play();
+          if (posttime == 6) {
+            posttime = 1;
+            if (!nowarning) {
+              audio1.pause();
+              audio2.pause();
+              audio1.load();
+              audio2.load();
+              audio2.play();
+            }
+            $.ajax({
+              type: "POST",
+              url: "http://124.70.106.8:8080/device/alarm/",
+              data: {
+                workername: "name",
+                lng: res.data[res.data.length - 1].fields.lng,
+                lat: res.data[res.data.length - 1].fields.lat,
+                high: res.data[res.data.length - 1].fields.high
+              },
+              success: function (res) {
+                console.log(res);
+              }
+            })
+          } else {
+            audio1.pause();
+            audio2.pause();
+            audio1.load();
+            audio2.load();
+            posttime++;
+          }
+        }
+        // 在安全区域内
+        else {
+          console.log(Math.min(...distanceArr));
+          if (Math.min(...distanceArr) < mindistance) {
+            console.log("靠近危险区域");
+            worker_part1.material.color.setHex(0xFFD700);
+            worker_part2.material.color.setHex(0xFFD700);
+            audio1.pause();
+            audio2.pause();
+            audio1.load();
+            audio2.load();
+            audio1.play();
+          }
+          else {
+            worker_part1.material.color.setHex(0x00FF00);
+            worker_part2.material.color.setHex(0x00FF00);
+            audio1.pause();
+            audio2.pause();
+            audio1.load();
+            audio2.load();
+          }
         }
         return c;
       }
@@ -1465,7 +1466,7 @@
         workLocation[1] <= maxy
       ) {
         // Step3: 计算点到线的距离
-        let distance = CheckDistance(WarinngArea, workLocation);
+        let distance = CheckDistanceSky(WarinngArea, workLocation);
         console.log(distance);
         switch (true) {
           case distance <= 26.5:
@@ -1481,7 +1482,88 @@
         return false;
       }
     }
-    function CheckDistance(LineLocation, PointLocation) {
+
+    // 检测最短距离（平面区域）
+    function CheckDistance(LineLocation, PointLocation, safearea) {
+      // 垂足点坐标
+      let FootPoint = [];
+
+      // 两点坐标差
+      let dx = LineLocation[1][0] - LineLocation[0][0];
+      let dy = LineLocation[1][1] - LineLocation[0][1];
+
+      // 墙体直线的k1，b1，还有垂直于墙体所在直线的k2，b2
+      let k1 = 0;
+      let k2 = 0;
+      let b1 = 0;
+      let b2 = 0;
+
+      // 计算最短距离
+      let dis = [];
+      let Distance = 0;
+
+      // 墙体所在直线的最小x和y
+      let LineLocation_X = [LineLocation[0][0], LineLocation[1][0]];
+      let LineLocation_Y = [LineLocation[0][1], LineLocation[1][1]];
+      //  确保两个点不是同一个点
+
+      // 墙体垂直于x轴
+      if (dy != 0 && dx == 0) {
+        FootPoint = [LineLocation[0][0], PointLocation[1]];
+        if (Math.min(...LineLocation_Y) <= FootPoint[1] && Math.max(...LineLocation_Y) >= FootPoint[1]) {
+          let xx = Math.abs(PointLocation[0] - FootPoint[0]);
+          let yy = Math.abs(PointLocation[1] - FootPoint[1]);
+          Distance = Math.sqrt(Math.pow(xx, 2) + Math.pow(yy, 2));
+        } else {
+          for (let i = 0; i < safearea.length - 1; i++) {
+            dis.push(Math.sqrt(Math.pow(Math.abs(safearea[i][0] - PointLocation[0]), 2) + Math.pow(Math.abs(safearea[i][1] - PointLocation[1]), 2)));
+          }
+          Distance = Math.min(...dis);
+        }
+      }
+      // 墙体垂直于y轴
+      else if (dx != 0 && dy == 0) {
+        FootPoint = [PointLocation[0], LineLocation[0][1]];
+        if (Math.min(...LineLocation_X) <= FootPoint[0] && Math.max(...LineLocation_X) >= FootPoint[0]) {
+          let xx = Math.abs(PointLocation[0] - FootPoint[0]);
+          let yy = Math.abs(PointLocation[1] - FootPoint[1]);
+          Distance = Math.sqrt(Math.pow(xx, 2) + Math.pow(yy, 2));
+        } else {
+          for (let i = 0; i < safearea.length - 1; i++) {
+            dis.push(Math.sqrt(Math.pow(Math.abs(safearea[i][0] - PointLocation[0]), 2) + Math.pow(Math.abs(safearea[i][1] - PointLocation[1]), 2)));
+          }
+          Distance = Math.min(...dis);
+        }
+      } else if (dx != 0 && dy != 0) {
+        //计算斜率
+        k1 = dy / dx;
+        b1 = LineLocation[0][1] - k1 * LineLocation[0][0];
+        k2 = -dx / dy;
+        b2 = PointLocation[1] - k2 * PointLocation[0];
+
+        // 垂足点坐标
+        FootPoint = [(b2 - b1) / (k1 - k2), k1 * (b2 - b1) / (k1 - k2) + b1];
+
+        // console.log(FootPoint);
+
+        // 如果垂足落在墙体所在直线上。则直接计算两点间距离，即为最短路径
+        if (Math.min(...LineLocation_Y) <= FootPoint[1] && Math.max(...LineLocation_Y) >= FootPoint[1]) {
+          let xx = Math.abs(PointLocation[0] - FootPoint[0]);
+          let yy = Math.abs(PointLocation[1] - FootPoint[1]);
+          Distance = Math.sqrt(Math.pow(xx, 2) + Math.pow(yy, 2));
+        }
+        // 如果垂足没有落在墙体所在直线上。则计算待测点（不是垂足点）与墙体所有坐标点的距离，取最短
+        else {
+          for (let i = 0; i < safearea.length - 1; i++) {
+            dis.push(Math.sqrt(Math.pow(Math.abs(safearea[i][0] - PointLocation[0]), 2) + Math.pow(Math.abs(safearea[i][1] - PointLocation[1]), 2)));
+          }
+          Distance = Math.min(...dis);
+        }
+      }
+      return Distance;
+    }
+    // 检测最短距离（高程区域）
+    function CheckDistanceSky(LineLocation, PointLocation) {
       let dx = LineLocation[1][0] - LineLocation[0][0];
       let dy = LineLocation[1][1] - LineLocation[0][1];
       let dz = LineLocation[1][2] - LineLocation[0][2];
@@ -1526,10 +1608,10 @@
 
       // 高程越界
       // let Skytest = [[-6, -6, 20], [6, -6, 18]];
-      var area2 = [[-12.2, -20, 28.5], [-24, 28, 28.5]];
-      var area3 = [[11.8, 0.5, 0], [11.8, 0.5, 10]];
-      var area4 = [[-12.2, -20, 28.5], [-24, 28, 28.5]];
-      var area5 = [[-12.2, -20, 5.5], [-24, 28, 5.5]];
+      var area2 = [[-13.2, -20, 28.5], [-24, 28, 28.5]];
+      var area3 = [[11.5, 0.2, 0], [11.5, 0.2, 10]];
+      var area4 = [[-13.2, -20, 28.5], [-24, 28, 28.5]];
+      var area5 = [[-13.2, -20, 5.5], [-24, 28, 5.5]];
 
 
       // 区域选择
@@ -1551,7 +1633,9 @@
                 document.getElementById("upLoadFile").style.display = "block";
                 break;
               case "区域一":
-                // var path = [[0, 0, 0], [0, 1, 0], [0, 2, 0], [0, 3, 0], [0, 4, 0], [0, 5, 0], [0, 6, 0], [0, 7, 0], [0, 8, 0], [0, 9, 0], [0, 10, 0], [0, 11, 0], [0, 12, 0], [0, 13, 0], [0, 14, 0], [0, 15, 0], [0, 16, 0], [0, 17, 0], [0, 18, 0], [0, 19, 0], [0, 20, 0]];
+                //var path1 = [[0, -5, 0], [0, -4, 0], [0, -3, 0], [0, -2, 0], [0, -1, 0], [0, 0, 0], [0, 1, 0], [0, 2, 0], [0, 3, 0], [0, 4, 0], [0, 5, 0], [0, 6, 0], [0, 7, 0], [0, 8, 0], [0, 9, 0], [0, 10, 0], [0, 11, 0], [0, 12, 0], [0, 13, 0], [0, 14, 0], [0, 15, 0], [0, 16, 0], [0, 17, 0], [0, 18, 0], [0, 19, 0], [0, 20, 0], [0, 21, 0], [0, 22, 0], [0, 23, 0], [0, 24, 0], [0, 25, 0], [0, 26, 0], [0, 27, 0], [0, 28, 0], [0, 29, 0], [0, 30, 0]];
+                // var path1 = [[-12, 0, 0], [-13, 0, 0], [-14, 0, 0], [-15, 0, 0], [-16, 0, 0], [-17, 0, 0], [-18, 0, 0], [-19, 0, 0], [-20, 0, 0], [-21, 0, 0], [-22, 0, 0], [-23, 0, 0], [-24, 0, 0], [-25, 0, 0], [-26, 0, 0], [-27, 0, 0], [-28, 0, 0], [-29, 0, 0], [-30, 0, 0], [-31, 0, 0], [-32, 0, 0]];
+                // var path1 = [[2, -2, 0], [1, -1, 0], [0, 0, 0], [-1, 1, 0], [-2, 2, 0], [-3, 3, 0], [-4, 4, 0], [-5, 5, 0], [-6, 6, 0], [-7, 7, 0], [-8, 8, 0], [-9, 9, 0], [-10, 10, 0], [-11, 11, 0], [-12, 12, 0], [-13, 13, 0], [-14, 14, 0], [-15, 15, 0], [-16, 16, 0], [-17, 17, 0], [-18, 18, 0], [-19, 19, 0], [-20, 20, 0], [-21, 21, 0], [-22, 22, 0]];
                 // var p = 0;
                 clearInterval(timer);
                 worker_part1.material.color.setHex(0x00FF00);
@@ -1559,14 +1643,16 @@
                 addWall(test);
                 check_dangerous(test, area2, area3, area4, area5, "ground");
                 // setInterval(() => {
-                //   if (p == path.length) {
+                //   if (p == path1.length) {
                 //     p = 0;
                 //   } else {
-                //     testcube.position.x = path[p][0];
-                //     testcube.position.y = path[p][1];
-                //     testcube.position.z = path[p][2];
-                //     console.log(testcube.position)
-                //     PlaneCheck(test, path[p]);
+                //     worker_part1.position.x = path1[p][0];
+                //     worker_part2.position.x = path1[p][0];
+                //     worker_part1.position.y = path1[p][1];
+                //     worker_part2.position.y = path1[p][1];
+                //     worker_part1.position.z = path1[p][2];
+                //     worker_part2.position.z = path1[p][2] - 0.3;
+                //     PlaneCheck(test, path1[p]);
                 //     p++;
                 //   }
                 // }, 1000);

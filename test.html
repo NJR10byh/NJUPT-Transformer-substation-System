@@ -3,254 +3,22 @@
 
 <head>
   <meta charset="UTF-8" />
-  <!-- <script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script> -->
-  <!-- jQuery备用CDN -->
-  <!-- <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script> -->
   <script src="js/jquery-3.1.1.js"></script>
   <script src="js/adapter.js"></script>
   <script src="js/platform.js"></script>
   <script src="js/h5splayer.js"></script>
   <script src="js/h5splayerhelper.js"></script>
-
   <link rel="stylesheet" type="text/css" href="css/h5splayer.css" />
-
-  <style type="text/css">
-    html,
-    body {
-      margin: 0;
-    }
-
-    canvas {
-      display: block;
-    }
-
-    .top {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      /* margin-bottom: 20px; */
-      /* border: 1px solid red; */
-    }
-
-    .top .histroySearch {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      /* border: 1px solid red; */
-      margin: 10px 0;
-    }
-
-    .top .histroySearch span {
-      margin-left: 10px;
-    }
-
-    .top .histroySearch button {
-      width: 80px;
-      height: 30px;
-      border: 0;
-      margin-left: 20px;
-      border-radius: 3px;
-      background: #01664f;
-      color: #fff;
-      font-weight: bold;
-      letter-spacing: 1px;
-      cursor: pointer;
-    }
-
-    #EndShowLine {
-      background: crimson;
-      border: 0;
-      display: none;
-    }
-
-    .top .histroySearch input {
-      height: 10px;
-      padding: 5px;
-    }
-
-    ul,
-    li {
-      list-style: none
-    }
-
-    .left {
-      float: left;
-    }
-
-    .right {
-      float: right;
-    }
-
-    .select_contain {
-      font-size: 14px;
-      color: #333;
-      line-height: 38px;
-      margin: 30px 0;
-    }
-
-    .select_item {
-      margin-right: 50px;
-      position: relative;
-      /* border: 1px solid #e54646; */
-    }
-
-    .select_tit {
-      margin-right: 20px;
-    }
-
-    .select_result {
-      width: 180px;
-      line-height: 38px;
-      border: 1px solid #ccc;
-      text-align: center;
-      border-radius: 4px;
-      text-indent: -8px;
-      cursor: pointer;
-    }
-
-    .select_result .triangle {
-      border: 5px solid transparent;
-      border-top: 5px solid #666;
-      position: absolute;
-      top: 16px;
-      right: 8px;
-    }
-
-    .select_item ul {
-      display: none;
-      position: absolute;
-      width: 180px;
-      background: #fff;
-      border: 1px solid #ccc;
-      border-radius: 0 0 4px 4px;
-      border-top-color: #f3f3f3;
-      margin-top: -4px;
-      padding: 0;
-    }
-
-    .select_item ul li {
-      text-align: center;
-      cursor: pointer;
-      padding: 10px 0;
-      border-bottom: 1px solid #ccc;
-    }
-
-    .select_item ul li:hover {
-      background: #01664f;
-      color: #fff;
-    }
-
-    .top .Select {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      margin: 10px 0;
-    }
-
-
-    .top .Select span {
-      margin-left: 10px;
-    }
-
-    .top .Select #upLoad {
-      border-radius: 3px;
-      background: #01664f;
-      color: #fff;
-      font-weight: bold;
-      margin-right: 20px;
-    }
-
-    .top .Select #upLoadFile {
-      display: none;
-    }
-
-    .top .Select #upLoad input__inner {
-      border: 1px solid #e54646;
-      background: #01664f;
-    }
-
-    .top .methods_AreaChoose {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      margin-bottom: 10px;
-    }
-
-    .camera1 {
-      position: absolute;
-      border: 1px solid MidnightBlue;
-      width: 500px;
-      height: 650px;
-      display: none;
-    }
-
-    .top .methods_AreaChoose .openwarning button {
-      display: none;
-    }
-
-
-    .top .methods_AreaChoose .openwarning button {
-      width: 120px;
-      background-color: #01664f;
-      border-radius: 6px;
-      border: 0;
-      color: #fff;
-      padding: 10px;
-      font-size: 16px;
-      font-weight: bold;
-      cursor: pointer;
-    }
-
-    .top .methods_AreaChoose .closewarning button {
-      width: 120px;
-      background-color: crimson;
-      border-radius: 6px;
-      border: 0;
-      color: #fff;
-      padding: 10px;
-      font-size: 16px;
-      font-weight: bold;
-      cursor: pointer;
-    }
-  </style>
+  <link rel="stylesheet" type="text/css" href="css/test.css" />
 </head>
 
 <body>
-  <div class="fakeLoader"></div>
-  <div class="top">
-    <div class="histroySearch">
-      <span>人员姓名：</span>
-      <input type="text" placeholder="请输入人员姓名" id="nameinfo" />
-      <span>开始日期：</span>
-      <input type="date" placeholder="请输入起始时间" id="startinfo" />
-      <span>结束日期：</span>
-      <input type="date" placeholder="请输入终止时间" id="endinfo" />
-      <button id="Searchbtn">查询</button>
-      <button id="AutoFix">自动校准</button>
-      <button id="BeginShowLine">开始画线</button>
-      <button id="EndShowLine">停止画线</button>
-    </div>
-    <div class="methods_AreaChoose">
-      <div class="methods">
-        <div class="select_item clearfix left">
-          <div class="select_module_con left">
-            <div class="select_result">
-              <span>选择划定区域的方式</span>
-              <div class="triangle"></div>
-            </div>
-            <ul>
-              <li>上传文件</li>
-            </ul>
-          </div>
-        </div>
-        <div class="Select">
-          <div id="upLoad">
-            <input type="file" id="upLoadFile">
-          </div>
-        </div>
+  <div id="app">
+    <div class="top">
+      <div class="histroySearch">
+        <button id="AutoFix">自动校准</button>
       </div>
-      <div class="AreaChoose">
+      <div class="methods_AreaChoose">
         <div class="select_item clearfix left">
           <div class="select_module_con left">
             <div class="select_result">
@@ -258,21 +26,20 @@
               <div class="triangle"></div>
             </div>
             <ul>
-              <li>区域一</li>
-              <li>区域二</li>
-              <li>区域三</li>
-              <li>高程上</li>
-              <li>高程下</li>
-              <!-- <li>集中检测</li> -->
+              <li>平面不规则区域</li>
+              <li>高程区域</li>
+              <li>平面区域二</li>
             </ul>
           </div>
         </div>
+        <input type="number" placeholder="请输入高程越界区域半径" id="inputradius"></input>
+        <button id="ConfirmRadius">确认半径</button>
       </div>
-      <div class="closewarning">
-        <button id="closebtn">关闭警报</input>
-      </div>
-      <div class="openwarning">
-        <button id="openbtn">打开警报</button>
+      <div class="About_Warning">
+        <button id="BeginShowLine">开始画线</button>
+        <button id="EndShowLine">停止画线</button>
+        <!-- <button id="openbtn">打开警报</button>
+        <button id="closebtn">关闭警报</button> -->
       </div>
     </div>
   </div>
@@ -281,8 +48,6 @@
   </div>
   <script type="module">
     import * as THREE from "./lib/build/three.module.js";
-
-    import Stats from "./lib/examples/jsm/libs/stats.module.js";
     import { GUI } from "./lib/examples/jsm/libs/dat.gui.module.js";
 
     import { OrbitControls } from "./lib/examples/jsm/controls/OrbitControls.js";
@@ -297,11 +62,12 @@
 
     var nowarning = false; // 是否报警
     var ifshowline = false; // 是否画线
+    var darwlineTimer = null;// 画线定时器
+    var timer = null;// 越界检测定时器
     var audio1 = new Audio("./sources/level1.mp3"); // 加载音频
     var audio2 = new Audio("./sources/level2.mp3"); // 加载音频
 
     //加入定时器
-    var timer = null;
     var i = 0;
 
     //先生成场景
@@ -311,7 +77,7 @@
     //场景参数变量
     var renderer, camera, gui, light_1, light_2, light_3;
     var mtlloader, objloader, fbxloader, gltfloader;
-    var stats, controls;
+    var controls;
 
     var linearea;
     var mouse = new THREE.Vector2();
@@ -356,8 +122,8 @@
 
       //初始化模型
       //添加辅助坐标
-      var helper = new THREE.AxesHelper(50);
-      scene.add(helper);
+      // var helper = new THREE.AxesHelper(50);
+      // scene.add(helper);
       // mtlloader = new MTLLoader();
       // objloader = new OBJLoader();
       fbxloader = new FBXLoader();
@@ -408,11 +174,6 @@
         scene.add(object);
       });
 
-
-      //初始化性能插件
-      stats = new Stats();
-      document.body.appendChild(stats.dom);
-
       //初始化用户交互插件
       controls = new OrbitControls(camera, renderer.domElement);
       // 使动画循环使用时阻尼或自转 意思是否有惯性
@@ -434,20 +195,6 @@
       window.addEventListener("resize", onWindowResize, false);
 
     }
-
-    // var btn = document.getElementById("Searchbtn");
-    // btn.onclick = function () {
-    //   var nameinfo = document.getElementById("nameinfo").value;
-    //   var startinfo = document.getElementById("startinfo").value;
-    //   var endinfo = document.getElementById("endinfo").value;
-    //   var URL =
-    //     "http://120.26.234.200:8080/location/history/?name=" +
-    //     nameinfo +
-    //     "&time1=" +
-    //     startinfo +
-    //     "&time2=" +
-    //     endinfo;
-    // };
 
     var latestlat, latestlng, latesthigh;// 原点经纬度
 
@@ -487,7 +234,7 @@
       cube = new THREE.Mesh(geometrytest, materialtest);// 原点
       testcube = new THREE.Mesh(geometrytest, materialtest);// 原点
       // scene.add(cube);
-      scene.add(testcube);
+      // scene.add(testcube);
 
       /* 模拟人物(球+圆锥) */
       // 球
@@ -632,7 +379,7 @@
     initCube();// 初始化模型函数
     function SafeHat() {
       // 如果有人员未带安全帽，将该区域的摄像头变红
-      console.log(camera_module1.material.color);
+      // console.log(camera_module1.material.color);
       // 摄像头默认是白色
       camera_module1.material.color.setHex(0xffffff);
       camera_stick1.material.color.setHex(0xffffff);
@@ -644,7 +391,6 @@
         type: "GET",
         url: "http://124.70.106.8:8080/device/check/",
         success: function (res) {
-          console.log(res.data);
           for (let i = 0; i < res.data.length; i++) {
             if (res.data[i].fields.rtmpname == "live1") {
               camera_module1.material.color.setHex(0xff0000);
@@ -720,7 +466,6 @@
     var aaa = "1";
 
     // 越界检测
-    var timer = null;
     function check_dangerous(test, area2, area3, area4, area5, mode) {
       var shishipath = [];
       posttime = 6;
@@ -737,26 +482,6 @@
             console.log(mode == "ground");
             switch (mode) {
               case "ground":
-                /* 路径绘制 */
-                if (ifshowline) {
-                  let newpath = {
-                    x: X_position(res.data[res.data.length - 1].fields.lng),
-                    y: Y_position(res.data[res.data.length - 1].fields.lat),
-                    z: Z_position(res.data[res.data.length - 1].fields.high),
-                  };
-                  shishipath.push(newpath);
-                  if (shishipath.length == 2) {
-                    ShowLine(
-                      shishipath[0].x,
-                      shishipath[1].x,
-                      shishipath[0].y,
-                      shishipath[1].y,
-                      shishipath[0].z,
-                      shishipath[1].z
-                    );
-                    shishipath.shift();
-                  }
-                }
                 // 平面越界警报
                 PlaneCheck(test, [X_position(res.data[res.data.length - 1].fields.lng), Y_position(res.data[res.data.length - 1].fields.lat), Z_position(res.data[res.data.length - 1].fields.high)]);
                 break;
@@ -1038,15 +763,12 @@
       //左键点击并且点击的是物体时
       if (event.button === 0 && intersects1[0]) {
         let selectObj = intersects1[0].object;//储存当前点击的对象
-        console.log(selectObj);
         divRender1();
       } else if (event.button === 0 && intersects2[0]) {
         let selectObj = intersects2[0].object;//储存当前点击的对象
-        console.log(selectObj);
         divRender2();
       } else if (event.button === 0 && intersects3[0]) {
         let selectObj = intersects3[0].object;//储存当前点击的对象
-        console.log(selectObj);
         divRender3();
       } else if (event.button === 2 || event.button === 1) {
         return;
@@ -1591,8 +1313,6 @@
 
 
     function initobstacle() {
-      // 三维围栏（BYH）
-
       // 区域越界
       var test = [
         [4, 3, 0],
@@ -1605,6 +1325,20 @@
         [-23, -14, 0],
         [4, 3, 0],
       ];
+
+      // 用户自定义test
+      // var test = [
+      //   [4, 3, 0],
+      //   [0, 11, 0],
+      //   [-17, 1, 0],
+      //   [-21, 7, 0],
+      //   [5, 22, 0],
+      //   [0, 31, 0],
+      //   [-37, 11, 0],
+      //   [-23, -14, 0],
+      //   [4, 3, 0],
+      // ];
+
 
       // 高程越界
       // let Skytest = [[-6, -6, 20], [6, -6, 18]];
@@ -1629,42 +1363,21 @@
             $(this).parent().prev().children("span").text($(this).text());
             ul.stop().slideUp();
             switch ($(this).text()) {
-              case "上传文件":
-                document.getElementById("upLoadFile").style.display = "block";
-                break;
-              case "区域一":
-                //var path1 = [[0, -5, 0], [0, -4, 0], [0, -3, 0], [0, -2, 0], [0, -1, 0], [0, 0, 0], [0, 1, 0], [0, 2, 0], [0, 3, 0], [0, 4, 0], [0, 5, 0], [0, 6, 0], [0, 7, 0], [0, 8, 0], [0, 9, 0], [0, 10, 0], [0, 11, 0], [0, 12, 0], [0, 13, 0], [0, 14, 0], [0, 15, 0], [0, 16, 0], [0, 17, 0], [0, 18, 0], [0, 19, 0], [0, 20, 0], [0, 21, 0], [0, 22, 0], [0, 23, 0], [0, 24, 0], [0, 25, 0], [0, 26, 0], [0, 27, 0], [0, 28, 0], [0, 29, 0], [0, 30, 0]];
-                // var path1 = [[-12, 0, 0], [-13, 0, 0], [-14, 0, 0], [-15, 0, 0], [-16, 0, 0], [-17, 0, 0], [-18, 0, 0], [-19, 0, 0], [-20, 0, 0], [-21, 0, 0], [-22, 0, 0], [-23, 0, 0], [-24, 0, 0], [-25, 0, 0], [-26, 0, 0], [-27, 0, 0], [-28, 0, 0], [-29, 0, 0], [-30, 0, 0], [-31, 0, 0], [-32, 0, 0]];
-                // var path1 = [[2, -2, 0], [1, -1, 0], [0, 0, 0], [-1, 1, 0], [-2, 2, 0], [-3, 3, 0], [-4, 4, 0], [-5, 5, 0], [-6, 6, 0], [-7, 7, 0], [-8, 8, 0], [-9, 9, 0], [-10, 10, 0], [-11, 11, 0], [-12, 12, 0], [-13, 13, 0], [-14, 14, 0], [-15, 15, 0], [-16, 16, 0], [-17, 17, 0], [-18, 18, 0], [-19, 19, 0], [-20, 20, 0], [-21, 21, 0], [-22, 22, 0]];
-                // var p = 0;
+              case "平面不规则区域":
                 clearInterval(timer);
                 worker_part1.material.color.setHex(0x00FF00);
                 worker_part2.material.color.setHex(0x00FF00);
                 addWall(test);
                 check_dangerous(test, area2, area3, area4, area5, "ground");
-                // setInterval(() => {
-                //   if (p == path1.length) {
-                //     p = 0;
-                //   } else {
-                //     worker_part1.position.x = path1[p][0];
-                //     worker_part2.position.x = path1[p][0];
-                //     worker_part1.position.y = path1[p][1];
-                //     worker_part2.position.y = path1[p][1];
-                //     worker_part1.position.z = path1[p][2];
-                //     worker_part2.position.z = path1[p][2] - 0.3;
-                //     PlaneCheck(test, path1[p]);
-                //     p++;
-                //   }
-                // }, 1000);
                 break;
-              case "区域二":
+              case "高程区域":
                 clearInterval(timer);
                 worker_part1.material.color.setHex(0x00FF00);
                 worker_part2.material.color.setHex(0x00FF00);
                 addSkycheck(new THREE.Vector3(area2[0][0], area2[0][1], area2[0][2]), new THREE.Vector3(area2[1][0], area2[1][1], area2[1][2]), 26);
                 check_dangerous(test, area2, area3, area4, area5, "sky");
                 break;
-              case "区域三":
+              case "平面区域二":
                 clearInterval(timer);
                 worker_part1.material.color.setHex(0x00FF00);
                 worker_part2.material.color.setHex(0x00FF00);
@@ -1703,56 +1416,64 @@
         ifshowline = true;
         document.getElementById("BeginShowLine").style.display = "none";
         document.getElementById("EndShowLine").style.display = "block";
-        // var i = 0;
-        // var shishipath = [];
-        // setInterval(() => {
-        //   if (ifshowline) {
-        //     if (i == path.length) {
-        //       i = 0;
-        //     } else {
-        //       let newpath = {
-        //         x: path[i][0],
-        //         y: path[i][1],
-        //         z: 0,
-        //       };
-        //       shishipath.push(newpath);
-        //       console.log(shishipath);
-        //       console.log(shishipath.length);
-        //       if (shishipath.length == 2) {
-        //         ShowLine(
-        //           shishipath[0].x,
-        //           shishipath[1].x,
-        //           shishipath[0].y,
-        //           shishipath[1].y,
-        //           shishipath[0].z,
-        //           shishipath[1].z
-        //         );
-        //         shishipath.shift();
-        //         i++;
-        //       }
-        //     }
-        //   }
-        // }, 1000);
+        var shishipath = [];
+        darwlineTimer = setInterval(() => {
+          if (ifshowline) {
+            $.ajax({
+              type: "GET",
+              url: "http://124.70.106.8:8080/location/latest/",
+              success: function (res) {
+                let newpath = {
+                  x: X_position(res.data[res.data.length - 1].fields.lng),
+                  y: Y_position(res.data[res.data.length - 1].fields.lat),
+                  z: 0,
+                };
+                shishipath.push(newpath);
+                if (shishipath.length == 2) {
+                  ShowLine(
+                    shishipath[0].x,
+                    shishipath[1].x,
+                    shishipath[0].y,
+                    shishipath[1].y,
+                    shishipath[0].z,
+                    shishipath[1].z
+                  );
+                  shishipath.shift();
+                }
+              },
+              error: function (res) {
+                console.log(res);
+              },
+            });
+          }
+        }, 500);
       }
       // 停止画线
       document.getElementById("EndShowLine").onclick = function () {
         ifshowline = false;
+        clearInterval(darwlineTimer);
         document.getElementById("BeginShowLine").style.display = "block";
         document.getElementById("EndShowLine").style.display = "none";
       }
-      // 关闭警报
-      document.getElementById("closebtn").onclick = function () {
-        nowarning = true;
-        document.getElementById("openbtn").style.display = "block";
-        document.getElementById("closebtn").style.display = "none";
-      }
-      // 打开警报
-      document.getElementById("openbtn").onclick = function () {
-        nowarning = false;
-        document.getElementById("openbtn").style.display = "none";
-        document.getElementById("closebtn").style.display = "block";
-      }
+      // // 关闭警报
+      // document.getElementById("closebtn").onclick = function () {
+      //   nowarning = true;
+      //   document.getElementById("openbtn").style.display = "block";
+      //   document.getElementById("closebtn").style.display = "none";
+      // }
+      // // 打开警报
+      // document.getElementById("openbtn").onclick = function () {
+      //   nowarning = false;
+      //   document.getElementById("openbtn").style.display = "none";
+      //   document.getElementById("closebtn").style.display = "block";
+      // }
 
+      // 根据用户输入的半径画高程越界区域
+      document.getElementById("ConfirmRadius").onclick = function () {
+        var confirmradius = document.getElementById("inputradius").value * 2.2;
+        addSkycheck(new THREE.Vector3(area2[0][0], area2[0][1], area2[0][2]), new THREE.Vector3(area2[1][0], area2[1][1], area2[1][2]), confirmradius);
+        check_dangerous(test, area2, area3, area4, area5, "sky");
+      }
     }
 
 
@@ -1795,9 +1516,6 @@
     function animate() {
       //更新控制器
       render();
-
-      //更新性能插件
-      stats.update();
 
       controls.update();
       position();

@@ -64,6 +64,8 @@
     var ifshowline = false; // 是否画线
     var darwlineTimer = null;// 画线定时器
     var timer = null;// 越界检测定时器
+    var SkyRadius = 26;// 高程半径
+    var shishipath = [];
     var audio1 = new Audio("./sources/level1.mp3"); // 加载音频
     var audio2 = new Audio("./sources/level2.mp3"); // 加载音频
 
@@ -198,8 +200,9 @@
 
     var latestlat, latestlng, latesthigh;// 原点经纬度
 
+
     var AutoFixbtn = document.getElementById("AutoFix");
-    AutoFixbtn.onclick = function () {
+    AutoFixbtn.onclick = function autofix() {
       $.ajax({
         type: "GET",
         url: "http://124.70.106.8:8080/location/latest/",
@@ -215,7 +218,7 @@
           console.log(res);
         },
       });
-    };
+    }
 
     // 初始化模型
     var cube, cube1, cube2, testcube, worker_part1, worker_part2, camera_module1, camera_module2, camera_module3, camera_stick1, camera_stick2, camera_stick3, posttime, mindistance;
@@ -467,7 +470,6 @@
 
     // 越界检测
     function check_dangerous(test, area2, area3, area4, area5, mode) {
-      var shishipath = [];
       posttime = 6;
       console.log(area3);
       timer = setInterval(function () {
@@ -484,6 +486,25 @@
               case "ground":
                 // 平面越界警报
                 PlaneCheck(test, [X_position(res.data[res.data.length - 1].fields.lng), Y_position(res.data[res.data.length - 1].fields.lat), Z_position(res.data[res.data.length - 1].fields.high)]);
+                if (ifshowline) {
+                  let newpath = {
+                    x: X_position(res.data[res.data.length - 1].fields.lng),
+                    y: Y_position(res.data[res.data.length - 1].fields.lat),
+                    z: 0,
+                  };
+                  shishipath.push(newpath);
+                  if (shishipath.length == 2) {
+                    ShowLine(
+                      shishipath[0].x,
+                      shishipath[1].x,
+                      shishipath[0].y,
+                      shishipath[1].y,
+                      shishipath[0].z,
+                      shishipath[1].z
+                    );
+                    shishipath.shift();
+                  }
+                }
                 break;
               case "sky":
                 // 高程越界警报
@@ -500,19 +521,19 @@
                       audio2.load();
                       audio2.play();
                     }
-                    $.ajax({
-                      type: "POST",
-                      url: "http://124.70.106.8:8080/device/alarm/",
-                      data: {
-                        workername: "name",
-                        lng: res.data[res.data.length - 1].fields.lng,
-                        lat: res.data[res.data.length - 1].fields.lat,
-                        high: res.data[res.data.length - 1].fields.high
-                      },
-                      success: function (res) {
-                        console.log(res)
-                      }
-                    })
+                    // $.ajax({
+                    //   type: "POST",
+                    //   url: "http://124.70.106.8:8080/device/alarm/",
+                    //   data: {
+                    //     workername: "name",
+                    //     lng: res.data[res.data.length - 1].fields.lng,
+                    //     lat: res.data[res.data.length - 1].fields.lat,
+                    //     high: res.data[res.data.length - 1].fields.high
+                    //   },
+                    //   success: function (res) {
+                    //     console.log(res)
+                    //   }
+                    // })
                   } else {
                     audio1.pause();
                     audio2.pause();
@@ -551,19 +572,19 @@
                       audio2.load();
                       audio2.play();
                     }
-                    $.ajax({
-                      type: "POST",
-                      url: "http://124.70.106.8:8080/device/alarm/",
-                      data: {
-                        workername: "name",
-                        lng: res.data[res.data.length - 1].fields.lng,
-                        lat: res.data[res.data.length - 1].fields.lat,
-                        high: res.data[res.data.length - 1].fields.high
-                      },
-                      success: function (res) {
-                        console.log(res)
-                      }
-                    })
+                    // $.ajax({
+                    //   type: "POST",
+                    //   url: "http://124.70.106.8:8080/device/alarm/",
+                    //   data: {
+                    //     workername: "name",
+                    //     lng: res.data[res.data.length - 1].fields.lng,
+                    //     lat: res.data[res.data.length - 1].fields.lat,
+                    //     high: res.data[res.data.length - 1].fields.high
+                    //   },
+                    //   success: function (res) {
+                    //     console.log(res)
+                    //   }
+                    // })
                   } else {
                     audio1.pause();
                     audio2.pause();
@@ -602,19 +623,19 @@
                           audio2.load();
                           audio2.play();
                         }
-                        $.ajax({
-                          type: "POST",
-                          url: "http://124.70.106.8:8080/device/alarm/",
-                          data: {
-                            workername: "name",
-                            lng: res.data[res.data.length - 1].fields.lng,
-                            lat: res.data[res.data.length - 1].fields.lat,
-                            high: res.data[res.data.length - 1].fields.high
-                          },
-                          success: function (res) {
-                            console.log(res)
-                          }
-                        })
+                        // $.ajax({
+                        //   type: "POST",
+                        //   url: "http://124.70.106.8:8080/device/alarm/",
+                        //   data: {
+                        //     workername: "name",
+                        //     lng: res.data[res.data.length - 1].fields.lng,
+                        //     lat: res.data[res.data.length - 1].fields.lat,
+                        //     high: res.data[res.data.length - 1].fields.high
+                        //   },
+                        //   success: function (res) {
+                        //     console.log(res)
+                        //   }
+                        // })
                       } else {
                         audio1.pause();
                         audio2.pause();
@@ -653,19 +674,19 @@
                           audio2.load();
                           audio2.play();
                         }
-                        $.ajax({
-                          type: "POST",
-                          url: "http://124.70.106.8:8080/device/alarm/",
-                          data: {
-                            workername: "name",
-                            lng: res.data[res.data.length - 1].fields.lng,
-                            lat: res.data[res.data.length - 1].fields.lat,
-                            high: res.data[res.data.length - 1].fields.high
-                          },
-                          success: function (res) {
-                            console.log(res)
-                          }
-                        })
+                        // $.ajax({
+                        //   type: "POST",
+                        //   url: "http://124.70.106.8:8080/device/alarm/",
+                        //   data: {
+                        //     workername: "name",
+                        //     lng: res.data[res.data.length - 1].fields.lng,
+                        //     lat: res.data[res.data.length - 1].fields.lat,
+                        //     high: res.data[res.data.length - 1].fields.high
+                        //   },
+                        //   success: function (res) {
+                        //     console.log(res)
+                        //   }
+                        // })
                       } else {
                         audio1.pause();
                         audio2.pause();
@@ -702,19 +723,19 @@
                       audio2.load();
                       audio2.play();
                     }
-                    $.ajax({
-                      type: "POST",
-                      url: "http://124.70.106.8:8080/device/alarm/",
-                      data: {
-                        workername: "name",
-                        lng: res.data[res.data.length - 1].fields.lng,
-                        lat: res.data[res.data.length - 1].fields.lat,
-                        high: res.data[res.data.length - 1].fields.high
-                      },
-                      success: function (res) {
-                        console.log(res)
-                      }
-                    })
+                    // $.ajax({
+                    //   type: "POST",
+                    //   url: "http://124.70.106.8:8080/device/alarm/",
+                    //   data: {
+                    //     workername: "name",
+                    //     lng: res.data[res.data.length - 1].fields.lng,
+                    //     lat: res.data[res.data.length - 1].fields.lat,
+                    //     high: res.data[res.data.length - 1].fields.high
+                    //   },
+                    //   success: function (res) {
+                    //     console.log(res)
+                    //   }
+                    // })
                   } else {
                     audio1.pause();
                     audio2.pause();
@@ -1071,19 +1092,19 @@
               audio2.load();
               audio2.play();
             }
-            $.ajax({
-              type: "POST",
-              url: "http://124.70.106.8:8080/device/alarm/",
-              data: {
-                workername: "name",
-                lng: res.data[res.data.length - 1].fields.lng,
-                lat: res.data[res.data.length - 1].fields.lat,
-                high: res.data[res.data.length - 1].fields.high
-              },
-              success: function (res) {
-                console.log(res);
-              }
-            })
+            // $.ajax({
+            //   type: "POST",
+            //   url: "http://124.70.106.8:8080/device/alarm/",
+            //   data: {
+            //     workername: "name",
+            //     lng: res.data[res.data.length - 1].fields.lng,
+            //     lat: res.data[res.data.length - 1].fields.lat,
+            //     high: res.data[res.data.length - 1].fields.high
+            //   },
+            //   success: function (res) {
+            //     console.log(res);
+            //   }
+            // })
           } else {
             audio1.pause();
             audio2.pause();
@@ -1190,11 +1211,12 @@
         // Step3: 计算点到线的距离
         let distance = CheckDistanceSky(WarinngArea, workLocation);
         console.log(distance);
+        let SkyRadiusarea = SkyRadius + 0.5;
         switch (true) {
-          case distance <= 26.5:
+          case distance <= SkyRadiusarea:
             return true;
             break;
-          case distance > 26.5:
+          case distance > SkyRadiusarea:
             return false;
             break;
           default:
@@ -1328,15 +1350,11 @@
 
       // 用户自定义test
       // var test = [
-      //   [4, 3, 0],
-      //   [0, 11, 0],
-      //   [-17, 1, 0],
-      //   [-21, 7, 0],
-      //   [5, 22, 0],
-      //   [0, 31, 0],
-      //   [-37, 11, 0],
-      //   [-23, -14, 0],
-      //   [4, 3, 0],
+      //   [20, 3, 0],
+      //   [26, 4, 0],
+      //   [25, 14, 0],
+      //   [16, 11, 0],
+      //   [20, 3, 0],
       // ];
 
 
@@ -1374,7 +1392,7 @@
                 clearInterval(timer);
                 worker_part1.material.color.setHex(0x00FF00);
                 worker_part2.material.color.setHex(0x00FF00);
-                addSkycheck(new THREE.Vector3(area2[0][0], area2[0][1], area2[0][2]), new THREE.Vector3(area2[1][0], area2[1][1], area2[1][2]), 26);
+                addSkycheck(new THREE.Vector3(area2[0][0], area2[0][1], area2[0][2]), new THREE.Vector3(area2[1][0], area2[1][1], area2[1][2]), SkyRadius);
                 check_dangerous(test, area2, area3, area4, area5, "sky");
                 break;
               case "平面区域二":
@@ -1416,42 +1434,43 @@
         ifshowline = true;
         document.getElementById("BeginShowLine").style.display = "none";
         document.getElementById("EndShowLine").style.display = "block";
-        var shishipath = [];
-        darwlineTimer = setInterval(() => {
-          if (ifshowline) {
-            $.ajax({
-              type: "GET",
-              url: "http://124.70.106.8:8080/location/latest/",
-              success: function (res) {
-                let newpath = {
-                  x: X_position(res.data[res.data.length - 1].fields.lng),
-                  y: Y_position(res.data[res.data.length - 1].fields.lat),
-                  z: 0,
-                };
-                shishipath.push(newpath);
-                if (shishipath.length == 2) {
-                  ShowLine(
-                    shishipath[0].x,
-                    shishipath[1].x,
-                    shishipath[0].y,
-                    shishipath[1].y,
-                    shishipath[0].z,
-                    shishipath[1].z
-                  );
-                  shishipath.shift();
-                }
-              },
-              error: function (res) {
-                console.log(res);
-              },
-            });
-          }
-        }, 500);
+        // var shishipath = [];
+        // darwlineTimer = setInterval(() => {
+        //   if (ifshowline) {
+        //     $.ajax({
+        //       type: "GET",
+        //       url: "http://124.70.106.8:8080/location/latest/",
+        //       success: function (res) {
+        //         let newpath = {
+        //           x: X_position(res.data[res.data.length - 1].fields.lng),
+        //           y: Y_position(res.data[res.data.length - 1].fields.lat),
+        //           z: 0,
+        //         };
+        //         shishipath.push(newpath);
+        //         if (shishipath.length == 2) {
+        //           ShowLine(
+        //             shishipath[0].x,
+        //             shishipath[1].x,
+        //             shishipath[0].y,
+        //             shishipath[1].y,
+        //             shishipath[0].z,
+        //             shishipath[1].z
+        //           );
+        //           shishipath.shift();
+        //         }
+        //       },
+        //       error: function (res) {
+        //         console.log(res);
+        //       },
+        //     });
+        //   }
+        // }, 500);
       }
       // 停止画线
       document.getElementById("EndShowLine").onclick = function () {
         ifshowline = false;
-        clearInterval(darwlineTimer);
+        shishipath = [];
+        // clearInterval(darwlineTimer);
         document.getElementById("BeginShowLine").style.display = "block";
         document.getElementById("EndShowLine").style.display = "none";
       }
@@ -1470,8 +1489,8 @@
 
       // 根据用户输入的半径画高程越界区域
       document.getElementById("ConfirmRadius").onclick = function () {
-        var confirmradius = document.getElementById("inputradius").value * 2.2;
-        addSkycheck(new THREE.Vector3(area2[0][0], area2[0][1], area2[0][2]), new THREE.Vector3(area2[1][0], area2[1][1], area2[1][2]), confirmradius);
+        SkyRadius = document.getElementById("inputradius").value * 2.2;
+        addSkycheck(new THREE.Vector3(area2[0][0], area2[0][1], area2[0][2]), new THREE.Vector3(area2[1][0], area2[1][1], area2[1][2]), SkyRadius);
         check_dangerous(test, area2, area3, area4, area5, "sky");
       }
     }
